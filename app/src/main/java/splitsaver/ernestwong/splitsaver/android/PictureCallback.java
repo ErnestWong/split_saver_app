@@ -21,11 +21,11 @@ import com.example.sudokusolver.util.SudokuSolver;
  */
 public class PictureCallback implements Camera.PictureCallback {
 
-	private com.example.sudokusolver.android.RectangleView mRectView;
-	private com.example.sudokusolver.android.SurfaceHolderCallback mShCB;
+	private RectangleView mRectView;
+	private SurfaceHolderCallback mShCB;
 	private Context mContext;
 
-	public PictureCallback(com.example.sudokusolver.android.RectangleView rectView, com.example.sudokusolver.android.SurfaceHolderCallback shCB,
+	public PictureCallback(RectangleView rectView, SurfaceHolderCallback shCB,
 			Context c) {
 		mRectView = rectView;
 		mShCB = shCB;

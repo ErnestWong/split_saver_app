@@ -11,8 +11,6 @@ import android.view.SurfaceHolder;
 import java.io.IOException;
 import java.util.List;
 
-import splitsaver.ernestwong.splitsaver.RectangleView;
-
 /**
  * class that manages changes made to surface
  * 
