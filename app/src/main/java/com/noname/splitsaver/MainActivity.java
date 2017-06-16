@@ -6,33 +6,22 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
 
 import java.io.File;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.noname.splitsaver.ImageActivity.EXTRA_IMAGE_URI;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 1;
-
-    @BindView(R.id.imageView)
-    ImageView imageView;
-
     private Uri imageUri;
 
-    @OnClick(R.id.captureButton)
+    @OnClick(R.id.cameraButton)
     void onCaptureButtonClicked() {
         dispatchTakePictureIntent();
-    }
-
-    @OnClick(R.id.sendButton)
-    void onSendButtonClicked() {
-//        if (imageFile != null) {
-//            NetworkManager.postImage(imageFile);
-//        }
     }
 
     @Override
@@ -46,12 +35,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            setImageView();
+            Intent intent = new Intent(this, ImageActivity.class);
+            intent.putExtra(EXTRA_IMAGE_URI, imageUri.toString());
+            startActivity(intent);
         }
-    }
-
-    public void setImageView() {
-        imageView.setImageURI(imageUri);
     }
 
     private void dispatchTakePictureIntent() {
