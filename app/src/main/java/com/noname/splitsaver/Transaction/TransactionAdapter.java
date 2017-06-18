@@ -9,6 +9,7 @@ import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 class TransactionAdapter extends RecyclerView.Adapter {
@@ -21,7 +22,9 @@ class TransactionAdapter extends RecyclerView.Adapter {
 
     private void populateDummyData() {
         for (int i = 0; i < 100; i++) {
-            transactionList.add(new Transaction("Dummy Transaction " + i, "Dummy Price " + i));
+            Date createDate = new Date();
+            Date purchaseDate = new Date(i, i % 12, i % 30);
+            transactionList.add(new Transaction("Transaction " + i, "Price " + i, createDate, purchaseDate));
         }
     }
 
