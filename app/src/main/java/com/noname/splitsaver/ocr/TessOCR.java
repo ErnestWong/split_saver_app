@@ -1,4 +1,4 @@
-package com.noname.splitsaver;
+package com.noname.splitsaver.ocr;
 
 import java.io.File;
 import java.io.FileOutputStream;
