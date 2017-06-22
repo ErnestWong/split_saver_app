@@ -50,25 +50,25 @@ public class ImageActivity extends AppCompatActivity {
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
         tessOCR = new TessOCR(this);
         rectView = new RectangleView(this);
-		relativeLayout.addView(rectView);
+        relativeLayout.addView(rectView);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_IMAGE_URI)) {
             Uri imageUri = Uri.parse(intent.getStringExtra(EXTRA_IMAGE_URI));
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e("Error", "failed to copy bitmap image");
             }
             setImageView(imageUri);
             Log.d("imageactivity", "in SetIMageView");
         }
 
-		surfaceView.setOnTouchListener(new View.OnTouchListener(){
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-                int x = (int)event.getX();
-                int y = (int)event.getY();
+        surfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         rectView.setTopLeft(x, y);
@@ -82,10 +82,10 @@ public class ImageActivity extends AppCompatActivity {
                         Log.i("TAG", "touched up: (" + x + ", " + y + ")");
                         break;
                 }
-				return true;
-			}
+                return true;
+            }
 
-		});
+        });
     }
 
     @OnClick(R.id.ocr_button)
@@ -102,7 +102,7 @@ public class ImageActivity extends AppCompatActivity {
         int width = dimensions.right - dimensions.left;
         int height = dimensions.bottom - dimensions.top;
         String s = String.format("t: %d, b: %d, l: %d, r: %d, w: %d, h: %d", dimensions.top, dimensions.bottom, dimensions.left,
-				dimensions.right, width, height);
+                dimensions.right, width, height);
         Log.d("imageActivity", s);
         return Bitmap.createBitmap(src, dimensions.left, dimensions.top, width, height);
     }
