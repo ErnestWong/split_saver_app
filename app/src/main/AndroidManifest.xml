@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ImageActivity" />
+        <activity android:name="TotalActivity" />
         <activity android:name=".Transaction.TransactionActivity" />
         <activity android:name=".MainActivity"/>
     </application>

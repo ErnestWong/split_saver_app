@@ -27,6 +27,7 @@ import butterknife.OnClick;
 
 public class ImageActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "extraImageUri";
+    public static final String EXTRA_TOTAL_AMOUNT = "extraTotalAmount";
     public static RectangleView rectView;
     private TessOCR tessOCR;
     private Bitmap imageBitmap;
@@ -93,8 +94,14 @@ public class ImageActivity extends AppCompatActivity {
         Bitmap cropped = cropBitmap(imageBitmap, ocrRect);
         imageView.setImageBitmap(cropped);
         imageBitmap = cropped;
-        getOCRResult(cropped);
+        dispatchTotalActivityIntent(getOCRResult(cropped));
 
+    }
+
+    void dispatchTotalActivityIntent(String total) {
+        Intent intent = new Intent(getBaseContext(), TotalActivity.class);
+        intent.putExtra(EXTRA_TOTAL_AMOUNT, total);
+        startActivity(intent);
     }
 
     /**
