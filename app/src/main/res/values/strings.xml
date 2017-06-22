@@ -3,4 +3,7 @@
     <string name="image_view">imageView</string>
     <string name="camera">CAMERA</string>
     <string name="transactions">TRANSACTIONS</string>
+    <string name="sendSMS">SEND SMS</string>
+    <string name="verify">VERIFY</string>
+    <string name="signup">SIGN UP</string>
 </resources>

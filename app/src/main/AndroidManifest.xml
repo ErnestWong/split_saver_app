@@ -21,6 +21,8 @@
         <activity android:name=".ImageActivity" />
         <activity android:name="TotalActivity" />
         <activity android:name=".Transaction.TransactionActivity" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SignupActivity"></activity>
     </application>
+
 </manifest>
