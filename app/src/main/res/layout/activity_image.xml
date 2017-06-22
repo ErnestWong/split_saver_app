@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,5 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/image_view" />
+
+    <Button
+        android:id="@+id/ocr_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="89dp"
+        android:text="OCR" />
 
 </RelativeLayout>
