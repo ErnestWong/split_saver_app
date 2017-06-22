@@ -7,21 +7,26 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
+import com.noname.splitsaver.Transaction.TransactionActivity;
+
 import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.noname.splitsaver.ImageActivity.EXTRA_IMAGE_URI;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 1;
     private Uri imageUri;
 
-    @OnClick(R.id.cameraButton)
-    void onCaptureButtonClicked() {
+    @OnClick(R.id.camera_button)
+    void onCameraButtonClicked() {
         dispatchTakePictureIntent();
+    }
+
+    @OnClick(R.id.transaction_button)
+    void onTransactionButtonClicked() {
+        TransactionActivity.startActivity(getApplicationContext());
     }
 
     @Override
@@ -35,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            Intent intent = new Intent(this, ImageActivity.class);
-            intent.putExtra(EXTRA_IMAGE_URI, imageUri.toString());
-            startActivity(intent);
+            ImageActivity.startActivity(getApplicationContext(), imageUri);
         }
     }
 
