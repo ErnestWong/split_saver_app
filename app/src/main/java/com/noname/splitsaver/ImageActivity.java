@@ -61,7 +61,6 @@ public class ImageActivity extends AppCompatActivity {
                 Log.e("Error", "failed to copy bitmap image");
             }
             setImageView(imageUri);
-            Log.d("imageactivity", "in SetIMageView");
         }
 
         surfaceView.setOnTouchListener(new View.OnTouchListener() {
@@ -98,12 +97,15 @@ public class ImageActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Crop bitmap based on Rect dimensions.
+     * @param src
+     * @param dimensions
+     * @return
+     */
     public Bitmap cropBitmap(Bitmap src, Rect dimensions) {
         int width = dimensions.right - dimensions.left;
         int height = dimensions.bottom - dimensions.top;
-        String s = String.format("t: %d, b: %d, l: %d, r: %d, w: %d, h: %d", dimensions.top, dimensions.bottom, dimensions.left,
-                dimensions.right, width, height);
-        Log.d("imageActivity", s);
         return Bitmap.createBitmap(src, dimensions.left, dimensions.top, width, height);
     }
 
