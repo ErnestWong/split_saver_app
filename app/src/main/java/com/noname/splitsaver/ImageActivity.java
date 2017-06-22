@@ -92,8 +92,8 @@ public class ImageActivity extends AppCompatActivity {
     void onCaptureButtonClicked() {
         Rect ocrRect = rectView.getScaledRect(imageBitmap);
         Bitmap cropped = cropBitmap(imageBitmap, ocrRect);
-        imageView.setImageBitmap(cropped);
-        imageBitmap = cropped;
+//        imageView.setImageBitmap(cropped);
+//        imageBitmap = cropped;
         dispatchTotalActivityIntent(getOCRResult(cropped));
 
     }
