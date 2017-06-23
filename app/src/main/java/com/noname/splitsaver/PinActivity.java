@@ -9,7 +9,9 @@ import android.util.Log;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 public class PinActivity extends Activity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +23,7 @@ public class PinActivity extends Activity {
     @OnClick(R.id.verify_sms_btn)
     void onCapturedSMS() {
         Log.d("PinActivity", "verify button clicked");
-        MainActivity.startActivity(getApplicationContext());
+        MainActivity.startActivity(getApplicationContext(), true);
     }
 
     public static void startActivity(Context context) {

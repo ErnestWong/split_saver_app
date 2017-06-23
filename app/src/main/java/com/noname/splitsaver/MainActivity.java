@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.noname.splitsaver.Transaction.TransactionActivity;
 
@@ -19,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 1;
     private Uri imageUri;
+    private Button signupBtn;
+
+    public static final String INTENT_USER_LOGGED_IN = "INTENT_USER_LOGGED_IN";
 
     @OnClick(R.id.cameraButton)
     void onCameraButtonClicked() {
@@ -33,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
     void onSignUpButtonClicked(){
         SignupActivity.startActivity(getApplicationContext());
     }
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, boolean loggedIn) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(INTENT_USER_LOGGED_IN, loggedIn);
         context.startActivity(intent);
     }
 
@@ -44,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        signupBtn = (Button) findViewById(R.id.signupButton);
+
+        Intent intent = getIntent();
+        boolean loggedIn = intent.getBooleanExtra(INTENT_USER_LOGGED_IN, false);
+        if (loggedIn) {
+           signupBtn.setVisibility(View.INVISIBLE);
+        } else {
+            signupBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
