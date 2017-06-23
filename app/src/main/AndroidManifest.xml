@@ -30,6 +30,7 @@
         <activity android:name=".Transaction.TransactionActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".PinActivity"></activity>
     </application>
 
 </manifest>

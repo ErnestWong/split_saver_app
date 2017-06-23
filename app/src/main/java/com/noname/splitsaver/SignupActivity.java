@@ -19,26 +19,29 @@ import com.noname.splitsaver.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import com.nexmo.sdk.core.client.ClientBuilderException;
 import com.nexmo.sdk.NexmoClient;
 import com.nexmo.sdk.verify.client.VerifyClient;
 
 public class SignupActivity extends AppCompatActivity {
 
-    Button smsBtn;
-    Button verifyBtn;
-
+    private VerifyClient verifyClient;
+    private Context context;
+    private EditText pinText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("SignupActivity", "testing");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        ButterKnife.bind(this);
 
-        smsBtn=(Button)findViewById(R.id.smsButton);
-        verifyBtn=(Button)findViewById(R.id.verify);
+        pinText = (EditText)findViewById(R.id.pin_edit_text);
 
-        Context context = getApplicationContext();
-        NexmoClient nexmoClient=null;
+        context = getApplicationContext();
+        NexmoClient nexmoClient;
 
         try {
             nexmoClient = new NexmoClient.NexmoClientBuilder()
@@ -46,32 +49,28 @@ public class SignupActivity extends AppCompatActivity {
                     .applicationId("674418ef-7dd1-4fdb-bf16-cc645b2eb9cf") //your App key
                     .sharedSecretKey("4d6547d61010730") //your App secret
                     .build();
+            verifyClient = new VerifyClient(nexmoClient);
         } catch (ClientBuilderException e) {
             e.printStackTrace();
         }
 
-        final VerifyClient verifyClient = new VerifyClient(nexmoClient);
+    }
 
-        smsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText nameText= (EditText)findViewById(R.id.name);
-                EditText phoneText=(EditText)findViewById(R.id.phone);
-                Log.d("I",nameText.toString());
-                Log.d("I",phoneText.toString());
-
-                verifyClient.getVerifiedUser("CA", "12267898040");
+    @OnClick(R.id.send_sms_btn)
+    void onCapturedVerify() {
+        Log.d("SignupActivity", "send button clicked");
+        if (verifyClient != null) {
+            try {
+                //verifyClient.getVerifiedUser("CA", "16476798322");
+                Log.d("SignupActivity", "finished sending phone number");
+                PinActivity.startActivity(getApplicationContext());
+            } catch (Exception e) {
+                Log.e("Signup failure", e.getMessage());
             }
-        });
+        } else {
+            Log.e("SignupActivity", "verifyClient null");
+        }
 
-        verifyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText pinText=(EditText)findViewById(R.id.pin);
-                verifyClient.checkPinCode(pinText.toString());
-                MainActivity.startActivity(getApplicationContext());
-            }
-        });
     }
 
     public static void startActivity(Context context) {
