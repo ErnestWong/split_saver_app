@@ -25,6 +25,7 @@ public class TransactionActivity extends AppCompatActivity {
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, TransactionActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

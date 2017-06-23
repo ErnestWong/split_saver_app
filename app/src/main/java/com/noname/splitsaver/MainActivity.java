@@ -1,5 +1,6 @@
 package com.noname.splitsaver;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,14 +20,23 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     private Uri imageUri;
 
-    @OnClick(R.id.camera_button)
+    @OnClick(R.id.cameraButton)
     void onCameraButtonClicked() {
         dispatchTakePictureIntent();
     }
 
-    @OnClick(R.id.transaction_button)
+    @OnClick(R.id.sendButton)
     void onTransactionButtonClicked() {
         TransactionActivity.startActivity(getApplicationContext());
+    }
+    @OnClick(R.id.signupButton)
+    void onSignUpButtonClicked(){
+        SignupActivity.startActivity(getApplicationContext());
+    }
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     @Override

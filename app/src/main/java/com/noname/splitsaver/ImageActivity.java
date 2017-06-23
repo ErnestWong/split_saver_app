@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class ImageActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "extraImageUri";
@@ -63,30 +64,27 @@ public class ImageActivity extends AppCompatActivity {
             }
             setImageView(imageUri);
         }
-
-        surfaceView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        rectView.setTopLeft(x, y);
-                        Log.i("TAG", "touched down: (" + x + ", " + y + ")");
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        rectView.setBottomRight(x, y);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        rectView.setBottomRight(x, y);
-                        Log.i("TAG", "touched up: (" + x + ", " + y + ")");
-                        break;
-                }
-                return true;
-            }
-
-        });
     }
+
+    @OnTouch(R.id.imagesurfaceview)
+    boolean onTouch(View v, MotionEvent event) {
+    int x = (int) event.getX();
+    int y = (int) event.getY();
+    switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            rectView.setTopLeft(x, y);
+            Log.i("TAG", "touched down: (" + x + ", " + y + ")");
+            break;
+        case MotionEvent.ACTION_MOVE:
+            rectView.setBottomRight(x, y);
+            break;
+        case MotionEvent.ACTION_UP:
+            rectView.setBottomRight(x, y);
+            Log.i("TAG", "touched up: (" + x + ", " + y + ")");
+            break;
+    }
+    return true;
+}
 
     @OnClick(R.id.ocr_button)
     void onCaptureButtonClicked() {
