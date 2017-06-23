@@ -61,7 +61,7 @@ public class SignupActivity extends AppCompatActivity {
         Log.d("SignupActivity", "send button clicked");
         if (verifyClient != null) {
             try {
-                verifyClient.getVerifiedUser("CA", "16476798322");
+                verifyClient.getVerifiedUser("CA", "12267898040");
                 Log.d("SignupActivity", "finished sending phone number");
                 PinActivity.startActivity(getApplicationContext());
             } catch (Exception e) {
