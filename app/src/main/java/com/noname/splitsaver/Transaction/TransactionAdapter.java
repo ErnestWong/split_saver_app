@@ -29,23 +29,23 @@ class TransactionAdapter extends RecyclerView.Adapter {
     }
 
     private void getData() {
-        Callback<JsonObject> callback = new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    String jsonString = response.body().toString();
-                    Log.d("DAVID", "onResponse: " + jsonString);
-                } else {
-                    Log.d("DAVID", "onResponse: " + response.errorBody());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        };
-        NetworkManager.getAllItems(callback);
+//        Callback<JsonObject> callback = new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                if (response.isSuccessful()) {
+//                    String jsonString = response.body().toString();
+//                    Log.d("DAVID", "onResponse: " + jsonString);
+//                } else {
+//                    Log.d("DAVID", "onResponse: " + response.errorBody());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        };
+//        NetworkManager.getAllItems(callback);
     }
 
     private void populateDummyData() {

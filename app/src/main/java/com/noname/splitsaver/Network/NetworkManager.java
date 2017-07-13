@@ -21,8 +21,8 @@ public class NetworkManager {
         service = retrofit.create(SplitSaverService.class);
     }
 
-    public static void getAllItems(Callback<JsonObject> callback) {
-        Call<JsonObject> call = service.getAllTransactions();
+    public static void postUser(Callback<JsonObject> callback, String name, String phoneNumber) {
+        Call<JsonObject> call = service.postUser(name, phoneNumber);
         call.enqueue(callback);
     }
 }

@@ -55,11 +55,13 @@ public class SignupActivity extends AppCompatActivity {
     @OnClick(R.id.send_sms_btn)
     void onCapturedVerify() {
         Log.d(TAG, "send button clicked");
+        String name = nameEditText.getText().toString();
+        String phoneNumber = phoneEditText.getText().toString();
         if (verifyClient != null) {
             try {
-                verifyClient.getVerifiedUser("CA", "16472892801");
+                verifyClient.getVerifiedUser("CA", "1" + phoneNumber);
                 Log.d(TAG, "finished sending phone number");
-                PinActivity.startActivity(getApplicationContext());
+                PinActivity.startActivity(getApplicationContext(), name, phoneNumber);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
