@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.nexmo.sdk.NexmoClient;
 import com.nexmo.sdk.core.client.ClientBuilderException;
@@ -57,6 +58,11 @@ public class SignupActivity extends AppCompatActivity {
         Log.d(TAG, "send button clicked");
         String name = nameEditText.getText().toString();
         String phoneNumber = phoneEditText.getText().toString();
+        if (name.isEmpty() || phoneNumber.isEmpty()) {
+            Toast.makeText(this, "Name or Phone Number Empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (verifyClient != null) {
             try {
                 verifyClient.getVerifiedUser("CA", "1" + phoneNumber);

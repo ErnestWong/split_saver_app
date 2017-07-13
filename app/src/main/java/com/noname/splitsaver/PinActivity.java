@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 
-import com.google.gson.JsonObject;
 import com.noname.splitsaver.Network.NetworkManager;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,6 +25,30 @@ public class PinActivity extends Activity {
     private static final String EXTRA_NAME = "extraName";
     private static final String EXTRA_PHONE = "extraPhone";
 
+    @BindView(R.id.pin_edit_text)
+    EditText pinEditText;
+
+    Callback<ResponseBody> postUserCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response.isSuccessful()) {
+                if (response.code() == 200) {
+                    Log.d(TAG, "onResponse: 200 - " + response.body());
+                    MainActivity.startActivity(getApplicationContext());
+                    PinActivity.this.finish();
+                } else {
+                    Log.e(TAG, "onResponse: " + response.body());
+                }
+            } else {
+                Log.e(TAG, "onResponse: failed - " + response.errorBody());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            t.printStackTrace();
+        }
+    };
     private String name;
     private String phoneNumber;
 
@@ -37,27 +63,10 @@ public class PinActivity extends Activity {
     @OnClick(R.id.verify_sms_btn)
     void onCapturedSMS() {
         Log.d(TAG, "onCapturedSMS: ");
-        Callback<JsonObject> callback = new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    if (response.code() == 200) {
-                        Log.d(TAG, "onResponse: " + response.body());
-                        MainActivity.startActivity(getApplicationContext(), true);
-                    } else {
-                        Log.d(TAG, "onResponse: " + response.body());
-                    }
-                } else {
-                    Log.d(TAG, "onResponse: " + response.errorBody());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        };
-        NetworkManager.postUser(callback, name, phoneNumber);
+        String pin = pinEditText.getText().toString();
+        if (!pin.equals("")) { //verify pin
+            NetworkManager.postUser(postUserCallback, name, phoneNumber);
+        }
     }
 
     @Override
