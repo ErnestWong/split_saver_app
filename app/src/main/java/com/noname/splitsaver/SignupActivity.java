@@ -28,9 +28,14 @@ public class SignupActivity extends AppCompatActivity {
     private VerifyClient verifyClient;
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, SignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        boolean isLogged = SplitSaverApplication.isLoggedIn(context);
+        if (isLogged) {
+            MainActivity.startActivity(context);
+        } else {
+            Intent intent = new Intent(context, SignupActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
     }
 
     @Override

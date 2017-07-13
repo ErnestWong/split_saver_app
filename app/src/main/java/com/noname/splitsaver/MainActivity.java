@@ -36,9 +36,11 @@ public class MainActivity extends AppCompatActivity {
         TransactionActivity.startActivity(getApplicationContext());
     }
 
-    @OnClick(R.id.signupButton)
+    @OnClick(R.id.logoutButton)
     void onSignUpButtonClicked() {
+        SplitSaverApplication.logout(getApplicationContext());
         SignupActivity.startActivity(getApplicationContext());
+        finish();
     }
 
     @Override

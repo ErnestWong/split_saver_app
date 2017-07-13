@@ -34,6 +34,7 @@ public class PinActivity extends Activity {
             if (response.isSuccessful()) {
                 if (response.code() == 200) {
                     Log.d(TAG, "onResponse: 200 - " + response.body());
+                    SplitSaverApplication.login(getApplicationContext());
                     MainActivity.startActivity(getApplicationContext());
                     PinActivity.this.finish();
                 } else {

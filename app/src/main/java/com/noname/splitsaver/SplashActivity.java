@@ -63,8 +63,7 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void ready) {
             super.onPostExecute(ready);
             // start main activity
-            Intent i = new Intent(SplashActivity.this, SignupActivity.class);
-            startActivity(i);
+            SignupActivity.startActivity(getApplicationContext());
             finish();
         }
 
