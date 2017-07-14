@@ -34,6 +34,7 @@ public class ImageActivity extends AppCompatActivity {
 
     public static void startActivity(Context context, Uri imageUri) {
         Intent intent = new Intent(context, ImageActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_IMAGE_URI, imageUri.toString());
         context.startActivity(intent);
     }

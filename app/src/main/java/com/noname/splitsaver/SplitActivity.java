@@ -61,6 +61,7 @@ public class SplitActivity extends Activity {
     public static void startActivity(Context context, float total) {
         Intent intent = new Intent(context, SplitActivity.class);
         intent.putExtra(EXTRA_TOTAL, total);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
