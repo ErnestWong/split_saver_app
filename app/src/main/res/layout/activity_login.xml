@@ -11,32 +11,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="SIGN UP"
+        android:text="LOGIN"
         android:textSize="50sp" />
-
-    <EditText
-        android:id="@+id/name_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:hint="Name"
-        android:inputType="text" />
 
     <EditText
         android:id="@+id/phone_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:digits="0123456789+"
         android:hint="Phone #"
         android:inputType="phone" />
 
     <Button
-        android:id="@+id/signup_btn"
+        android:id="@+id/login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/sign_up"
+        android:text="@string/login"
         android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/skip_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="SKIP LOGIN"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/signup_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/sign_up_now"
+        android:textSize="20sp" />
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
+import com.noname.splitsaver.Login.LoginActivity;
 import com.noname.splitsaver.Transaction.TransactionActivity;
 
 import java.io.File;
@@ -26,20 +27,20 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    @OnClick(R.id.cameraButton)
+    @OnClick(R.id.camera_btn)
     void onCameraButtonClicked() {
         dispatchTakePictureIntent();
     }
 
-    @OnClick(R.id.sendButton)
+    @OnClick(R.id.history_btn)
     void onTransactionButtonClicked() {
         TransactionActivity.startActivity(getApplicationContext());
     }
 
-    @OnClick(R.id.logoutButton)
-    void onSignUpButtonClicked() {
-        SplitSaverApplication.logout(getApplicationContext());
-        SignupActivity.startActivity(getApplicationContext());
+    @OnClick(R.id.logout_btn)
+    void onLogoutButtonClicked() {
+        MainApplication.logout(getApplicationContext());
+        LoginActivity.startActivity(getApplicationContext());
         finish();
     }
 

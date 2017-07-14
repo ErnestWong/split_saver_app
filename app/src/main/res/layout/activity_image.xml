@@ -7,8 +7,7 @@
     <SurfaceView
         android:id="@+id/imagesurfaceview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </SurfaceView>
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/image_view"
@@ -17,12 +16,11 @@
         android:contentDescription="@string/image_view" />
 
     <Button
-        android:id="@+id/ocr_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/split_btn"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="89dp"
-        android:text="OCR" />
+        android:layout_marginBottom="50dp"
+        android:text="SPLIT BILL" />
 
 </RelativeLayout>
