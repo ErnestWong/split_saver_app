@@ -1,26 +1,34 @@
 package com.noname.splitsaver.Models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Transaction {
 
     private String name;
-    private String totalPrice;
+    private double totalPrice;
     private Date createDate;
     private Date purchaseDate;
+    private ArrayList<Item> items;
 
-    public Transaction(String name, String totalPrice, Date createDate, Date purchaseDate) {
+    public Transaction(String name, double totalPrice, Date createDate, Date purchaseDate) {
         this.name = name;
         this.totalPrice = totalPrice;
         this.createDate = createDate;
         this.purchaseDate = purchaseDate;
+        items = new ArrayList<Item>();
+    }
+
+    public ArrayList<Item> addItem(Item item) {
+        items.add(item);
+        return items;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 

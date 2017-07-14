@@ -68,6 +68,7 @@ public class PinActivity extends Activity {
         if (!pin.equals("")) { //verify pin
             NetworkManager.postUser(postUserCallback, name, phoneNumber);
         }
+        MainActivity.startActivity(getApplicationContext());
     }
 
     @Override

@@ -37,7 +37,7 @@ class TransactionViewHolder extends RecyclerView.ViewHolder {
 
     void bindView(Transaction transaction) {
         name.setText(transaction.getName());
-        totalPrice.setText(transaction.getTotalPrice());
+        totalPrice.setText(String.format("price $%.2f", transaction.getTotalPrice()));
         purchaseDate.setText(monthDayYearFormat.format(transaction.getPurchaseDate()));
         createDate.setText(monthDayFormat.format(transaction.getCreateDate()));
     }
