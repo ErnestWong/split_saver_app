@@ -2,11 +2,12 @@ package com.noname.splitsaver;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+
+import com.noname.splitsaver.Login.LoginActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,7 +64,7 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void ready) {
             super.onPostExecute(ready);
             // start main activity
-            SignupActivity.startActivity(getApplicationContext());
+            LoginActivity.startActivity(getApplicationContext());
             finish();
         }
 

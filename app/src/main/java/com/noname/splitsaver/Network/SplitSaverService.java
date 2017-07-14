@@ -9,6 +9,10 @@ import retrofit2.http.POST;
 public interface SplitSaverService {
 
     @FormUrlEncoded
-    @POST("user/createUser")
-    Call<ResponseBody> postUser(@Field("name") String name, @Field("phoneNumber") String phoneNumber);
+    @POST("user/")
+    Call<ResponseBody> postCreateUser(@Field("name") String name, @Field("phoneNumber") String phoneNumber);
+
+    @FormUrlEncoded
+    @POST("user/login")
+    Call<ResponseBody> postLoginUser(@Field("phoneNumber") String phoneNumber);
 }

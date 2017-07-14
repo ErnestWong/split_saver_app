@@ -10,16 +10,12 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.noname.splitsaver.ocr.TessOCR;
-
-import java.util.logging.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,42 +64,38 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnTouch(R.id.imagesurfaceview)
     boolean onTouch(View v, MotionEvent event) {
-    int x = (int) event.getX();
-    int y = (int) event.getY();
-    switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            rectView.setTopLeft(x, y);
-            Log.i("TAG", "touched down: (" + x + ", " + y + ")");
-            break;
-        case MotionEvent.ACTION_MOVE:
-            rectView.setBottomRight(x, y);
-            break;
-        case MotionEvent.ACTION_UP:
-            rectView.setBottomRight(x, y);
-            Log.i("TAG", "touched up: (" + x + ", " + y + ")");
-            break;
-    }
-    return true;
-}
-
-    @OnClick(R.id.ocr_button)
-    void onCaptureButtonClicked() {
-        Rect ocrRect = rectView.getScaledRect(imageBitmap);
-        Bitmap cropped = cropBitmap(imageBitmap, ocrRect);
-//        imageView.setImageBitmap(cropped);
-//        imageBitmap = cropped;
-        dispatchTotalActivityIntent(getOCRResult(cropped));
-
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                rectView.setTopLeft(x, y);
+                Log.i("TAG", "touched down: (" + x + ", " + y + ")");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                rectView.setBottomRight(x, y);
+                break;
+            case MotionEvent.ACTION_UP:
+                rectView.setBottomRight(x, y);
+                Log.i("TAG", "touched up: (" + x + ", " + y + ")");
+                break;
+        }
+        return true;
     }
 
-    void dispatchTotalActivityIntent(String total) {
-        Intent intent = new Intent(getBaseContext(), TotalActivity.class);
-        intent.putExtra(EXTRA_TOTAL_AMOUNT, total);
-        startActivity(intent);
+    @OnClick(R.id.split_btn)
+    void onSplitButtonClicked() {
+        String stringTotal = getOCRResult();
+        try {
+            float total = Float.parseFloat(stringTotal);
+            SplitActivity.startActivity(getApplicationContext(), total);
+        } catch (NumberFormatException e) {
+            Log.e("ImageActivity", "onSplitButtonClicked: ", e);
+        }
     }
 
     /**
      * Crop bitmap based on Rect dimensions.
+     *
      * @param src
      * @param dimensions
      * @return
@@ -119,7 +111,10 @@ public class ImageActivity extends AppCompatActivity {
     }
 
 
-    private String getOCRResult(Bitmap bitmap) {
+    private String getOCRResult() {
+        Rect ocrRect = rectView.getScaledRect(imageBitmap);
+        Bitmap bitmap = cropBitmap(imageBitmap, ocrRect);
+
         if (!tessOCR.isInit()) {
             tessOCR.initOCR();
         }

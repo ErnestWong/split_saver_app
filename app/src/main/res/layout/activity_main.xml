@@ -2,32 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/cameraButton"
+        android:id="@+id/camera_btn"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
         android:layout_marginTop="25dp"
         android:text="@string/camera"
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/sendButton"
+        android:id="@+id/history_btn"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="75dp"
-        android:text="@string/transactions"
+        android:layout_marginTop="50dp"
+        android:text="@string/history"
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/logoutButton"
+        android:id="@+id/logout_btn"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="50dp"
         android:text="@string/logout"
         android:textSize="15sp" />
 

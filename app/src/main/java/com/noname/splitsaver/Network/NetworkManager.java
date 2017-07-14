@@ -20,8 +20,13 @@ public class NetworkManager {
         service = retrofit.create(SplitSaverService.class);
     }
 
-    public static void postUser(Callback<ResponseBody> callback, String name, String phoneNumber) {
-        Call<ResponseBody> call = service.postUser(name, phoneNumber);
+    public static void postCreateUser(Callback<ResponseBody> callback, String name, String phoneNumber) {
+        Call<ResponseBody> call = service.postCreateUser(name, phoneNumber);
+        call.enqueue(callback);
+    }
+
+    public static void postLoginUser(Callback<ResponseBody> callback, String phoneNumber) {
+        Call<ResponseBody> call = service.postLoginUser(phoneNumber);
         call.enqueue(callback);
     }
 }

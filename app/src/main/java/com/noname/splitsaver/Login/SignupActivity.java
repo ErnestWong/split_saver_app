@@ -1,4 +1,4 @@
-package com.noname.splitsaver;
+package com.noname.splitsaver.Login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +8,9 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.nexmo.sdk.NexmoClient;
-import com.nexmo.sdk.core.client.ClientBuilderException;
 import com.nexmo.sdk.verify.client.VerifyClient;
+import com.noname.splitsaver.MainApplication;
+import com.noname.splitsaver.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,22 +20,15 @@ public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
 
-    @BindView(R.id.name_edit_text)
+    @BindView(R.id.name_editText)
     EditText nameEditText;
-    @BindView(R.id.phone_edit_text)
+    @BindView(R.id.phone_editText)
     EditText phoneEditText;
 
-    private VerifyClient verifyClient;
-
     public static void startActivity(Context context) {
-        boolean isLogged = SplitSaverApplication.isLoggedIn(context);
-        if (isLogged) {
-            MainActivity.startActivity(context);
-        } else {
-            Intent intent = new Intent(context, SignupActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+        Intent intent = new Intent(context, SignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     @Override
@@ -43,22 +36,9 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-
-        NexmoClient nexmoClient;
-        try {
-            nexmoClient = new NexmoClient.NexmoClientBuilder()
-                    .context(getApplicationContext())
-                    .applicationId("674418ef-7dd1-4fdb-bf16-cc645b2eb9cf") //your App key
-                    .sharedSecretKey("4d6547d61010730") //your App secret
-                    .build();
-            verifyClient = new VerifyClient(nexmoClient);
-        } catch (ClientBuilderException e) {
-            e.printStackTrace();
-        }
-
     }
 
-    @OnClick(R.id.send_sms_btn)
+    @OnClick(R.id.signup_btn)
     void onCapturedVerify() {
         Log.d(TAG, "send button clicked");
         String name = nameEditText.getText().toString();
@@ -68,11 +48,12 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+        VerifyClient verifyClient = MainApplication.getVerifyClient();
         if (verifyClient != null) {
             try {
                 verifyClient.getVerifiedUser("CA", "1" + phoneNumber);
                 Log.d(TAG, "finished sending phone number");
-                PinActivity.startActivity(getApplicationContext(), name, phoneNumber);
+                PinActivity.startActivityAsSignup(getApplicationContext(), name, phoneNumber);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }

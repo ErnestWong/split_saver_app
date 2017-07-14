@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Split Saver</string>
     <string name="image_view">imageView</string>
-    <string name="camera">CAMERA</string>
-    <string name="transactions">TRANSACTIONS</string>
-    <string name="sendSMS">SEND SMS</string>
+    <string name="camera">CREATE DIGITAL RECEIPT</string>
+    <string name="history">TRANSACTION HISTORY</string>
+    <string name="login">LOGIN</string>
+    <string name="sign_up">SIGN UP</string>
     <string name="verify">VERIFY</string>
     <string name="logout">LOGOUT</string>
+    <string name="sign_up_now"><u>SIGN UP NOW</u></string>
 </resources>
