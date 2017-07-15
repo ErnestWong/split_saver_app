@@ -11,6 +11,7 @@ public class Transaction {
     private Date purchaseDate;
     private ArrayList<Item> items;
 
+
     public Transaction(String name, double totalPrice, Date createDate, Date purchaseDate) {
         this.name = name;
         this.totalPrice = totalPrice;

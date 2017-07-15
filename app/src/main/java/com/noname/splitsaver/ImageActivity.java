@@ -14,8 +14,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.ocr.TessOCR;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +32,8 @@ public class ImageActivity extends AppCompatActivity {
     public static RectangleView rectView;
     private TessOCR tessOCR;
     private Bitmap imageBitmap;
+    private ArrayList<Float> itemAmounts;
+    private Float total;
 
     @BindView(R.id.image_view)
     ImageView imageView;
@@ -44,6 +50,7 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
+        itemAmounts = new ArrayList<Float>();
 
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.imagesurfaceview);
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
@@ -83,16 +90,40 @@ public class ImageActivity extends AppCompatActivity {
         return true;
     }
 
-    @OnClick(R.id.split_btn)
-    void onSplitButtonClicked() {
-        String stringTotal = getOCRResult();
+    @OnClick(R.id.add_total_btn)
+    void onAddTotalButtonClicked() {
+//        String stringTotal = getOCRResult();
+        String stringTotal = "123.45";
         try {
-            float total = Float.parseFloat(stringTotal);
-            SplitActivity.startActivity(getApplicationContext(), total);
+            this.total = Float.parseFloat(stringTotal);
+            Log.d("ImageActivity", String.format("OCR total amount: %f", this.total));
         } catch (NumberFormatException e) {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
         }
     }
+
+    @OnClick(R.id.add_item_btn)
+    void onAddItemButtonClicked() {
+//        String stringAmount = getOCRResult();
+        String stringAmount = "12.00";
+        try {
+            float amount = Float.parseFloat(stringAmount);
+            itemAmounts.add(amount);
+            Log.d("ImageActivity", String.format("OCR item amount: %f", amount));
+        } catch (NumberFormatException e) {
+            Log.e("ImageActivity", "onSplitButtonClicked: ", e);
+        }
+    }
+
+    @OnClick(R.id.split_btn)
+    void onSplitButtonClicked() {
+        if (this.total == null) {
+            Toast.makeText(this, "Please select a total first", Toast.LENGTH_SHORT).show();
+        } else {
+            SplitActivity.startActivity(getApplicationContext(), this.total, itemAmounts);
+        }
+    }
+
 
     /**
      * Crop bitmap based on Rect dimensions.
@@ -121,6 +152,15 @@ public class ImageActivity extends AppCompatActivity {
         }
         String result = tessOCR.doOCR(bitmap);
         Log.d("imageActivity", "OCR image result: " + result);
-        return result;
+        return cleanup(result);
+    }
+
+    /**
+     * Removes spaces or dollar signs from the OCR string.
+     * @param result
+     * @return
+     */
+    private String cleanup(String result) {
+        return result.replaceAll("\\s+","").replaceAll("\\$", "");
     }
 }

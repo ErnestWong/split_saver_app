@@ -12,8 +12,16 @@ public class Item {
         this.payee = payee;
     }
 
+    public Item(double amount) {
+        this.amount = amount;
+    }
+
     public void setPayee(Payee payee) {
         this.payee = payee;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
