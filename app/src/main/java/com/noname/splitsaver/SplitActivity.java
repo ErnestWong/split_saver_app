@@ -8,20 +8,29 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import java.util.Arrays;
+import butterknife.OnEditorAction;
+import butterknife.OnTouch;
+
 import com.noname.splitsaver.Item.ItemAdapter;
 import com.noname.splitsaver.Models.Item;
+import com.noname.splitsaver.Models.Transaction;
 
 
 public class SplitActivity extends Activity {
@@ -34,8 +43,7 @@ public class SplitActivity extends Activity {
 
     ItemAdapter itemAdapter;
 
-    @BindView(R.id.receipt_name_editText)
-    EditText nameEditText;
+
 
     @BindView(R.id.num_items_editText)
     EditText numEditText;
@@ -45,6 +53,15 @@ public class SplitActivity extends Activity {
 
     @BindView(R.id.total_textView)
     TextView totalTextView;
+
+    @BindView(R.id.receipt_name_viewSwitcher)
+    ViewSwitcher receiptNameViewSwitcher;
+
+    @BindView(R.id.receipt_name_editText)
+    EditText receiptNameEditText;
+
+    @BindView(R.id.receipt_name_textView)
+    TextView receiptNameTextView;
 
     private int numItems = 0;
     private float total = 0;
@@ -106,6 +123,8 @@ public class SplitActivity extends Activity {
 
         populateFields();
 
+        receiptNameEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        receiptNameEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         numEditText.addTextChangedListener(numTextWatcher);
         setupRecyclerView();
     }
@@ -120,14 +139,68 @@ public class SplitActivity extends Activity {
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
+    @OnEditorAction(R.id.receipt_name_editText)
+    boolean onReceiptNameTextChanged(int actionId, KeyEvent event) {
+        Log.d("SplitActivity", "action: " + String.valueOf(actionId));
+        String receiptName = receiptNameEditText.getText().toString();
+        if (actionId == EditorInfo.IME_ACTION_DONE && receiptName.length() > 0) {
+            Log.d("SplitActivity", "receipt name: " + receiptName);
+            receiptNameEditText.setEnabled(false);
+            if (receiptNameViewSwitcher.getCurrentView().equals(receiptNameEditText)) {
+                receiptNameTextView.setText(receiptName);
+                receiptNameViewSwitcher.showNext();
+            }
+            // set item name to whatever is in the edittext
+        }
+        return true;
+    }
+
+    @OnTouch(R.id.receipt_name_textView)
+    boolean onTouchTextView() {
+        Log.d("SplitActivity", "touched receipt textview");
+        if (receiptNameViewSwitcher.getCurrentView().equals(receiptNameTextView)) {
+            receiptNameViewSwitcher.showNext();
+            receiptNameEditText.setEnabled(true);
+        }
+        return true;
+    }
+
     @OnClick(R.id.save_btn)
     void onCapturedSMS() {
-        String name = nameEditText.getText().toString();
-        List<Float> lineItems = new ArrayList<>();
-        for (int i = 0; i < numItems; i++) {
-            lineItems.add(lineItem);
-        }
+        Log.d("splitactivity", "pressed save button");
+        Transaction transaction = createTransaction();
+    }
 
+    private Transaction createTransaction() {
+        String transactionName = receiptNameEditText.getText().toString().trim();
+        String transactionTotalString = numEditText.getText().toString().trim();
+        Log.d("SplitActivity", "receipt name: " + transactionName);
+        Log.d("SplitActivity", "receipt itotal: " + transactionTotalString);
+
+        if (transactionName.equals("")) {
+            Toast.makeText(getApplicationContext(), "Please enter a receipt name", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        if (transactionTotalString.equals("")) {
+            Toast.makeText(getApplicationContext(), "Please enter a receipt total", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        if (itemListNameEmpty()) {
+             Toast.makeText(getApplicationContext(), "Please enter a name for each line item", Toast.LENGTH_SHORT).show();
+             return null;
+        }
+        double  transactionTotal = Double.parseDouble(transactionTotalString);
+        Date current = new Date();
+        return new Transaction(transactionName, transactionTotal, current, current, itemAdapter.getItemList());
+    }
+
+    private boolean itemListNameEmpty() {
+        for (Item i : itemAdapter.getItemList()) {
+            if (i.getName() == null || i.getName().equals("")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static float[] toPrimitive(ArrayList<Float> list) {

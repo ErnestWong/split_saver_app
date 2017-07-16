@@ -38,4 +38,8 @@ public class ItemAdapter extends RecyclerView.Adapter {
         return itemAmountList.size();
     }
 
+    public List<Item> getItemList() {
+        return itemAmountList;
+    }
+
 }

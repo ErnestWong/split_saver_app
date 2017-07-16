@@ -32,6 +32,8 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
 //    @BindView(R.id.amount_textView)
 //    TextView amountTextView;
 
+    private Item item;
+
     @BindView(R.id.item_name_editText)
     EditText nameEditText;
 
@@ -50,6 +52,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bindView(Item item) {
+        this.item = item;
 //        amountTextView.setText(Double.toString(item.getAmount()));
 //        nameEditText.addTextChangedListener(numTextWatcher);
         Log.d("ItemViewHolder", "in bindView");
@@ -58,14 +61,15 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     @OnEditorAction(R.id.item_name_editText)
     boolean onNameTextChanged(int actionId, KeyEvent event) {
         Log.d("itemViewHandler", "action: " + String.valueOf(actionId));
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            String name = nameEditText.getText().toString();
-            Log.d("ItemViewHandler", "name: " + name);
+        String itemName = nameEditText.getText().toString().trim();
+        if (actionId == EditorInfo.IME_ACTION_DONE && itemName.length() > 0) {
+            Log.d("ItemViewHandler", "name: " + itemName);
             nameEditText.setEnabled(false);
             if (nameViewSwitcher.getCurrentView().equals(nameEditText)) {
-                nameTextView.setText(nameEditText.getText().toString());
+                nameTextView.setText(itemName);
                 nameViewSwitcher.showNext();
             }
+            item.setName(itemName);
             // set item name to whatever is in the edittext
         }
         return true;
