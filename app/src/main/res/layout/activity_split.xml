@@ -30,6 +30,12 @@
     </ViewSwitcher>
 
     <LinearLayout
+        android:id="@+id/even_split_total_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -52,13 +58,6 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,13 +69,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30sp" />
-
     </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/item_split_total_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/item_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

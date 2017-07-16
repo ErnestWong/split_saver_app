@@ -12,8 +12,10 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -43,8 +45,6 @@ public class SplitActivity extends Activity {
 
     ItemAdapter itemAdapter;
 
-
-
     @BindView(R.id.num_items_editText)
     EditText numEditText;
 
@@ -62,6 +62,12 @@ public class SplitActivity extends Activity {
 
     @BindView(R.id.receipt_name_textView)
     TextView receiptNameTextView;
+
+    @BindView(R.id.item_split_total_layout)
+    LinearLayout itemSplitTotalLayout;
+
+    @BindView(R.id.even_split_total_layout)
+    LinearLayout evenSplitTotalLayout;
 
     private int numItems = 0;
     private float total = 0;
@@ -112,6 +118,12 @@ public class SplitActivity extends Activity {
         }
         lineItemTextView.setText(String.valueOf(total));
         totalTextView.setText(String.valueOf(lineItem));
+
+        if (lineItems.size() == 0) {
+            itemSplitTotalLayout.setVisibility(View.GONE);
+        } else {
+            evenSplitTotalLayout.setVisibility(View.GONE);
+        }
     }
 
 
