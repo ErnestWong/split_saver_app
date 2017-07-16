@@ -29,8 +29,8 @@ import butterknife.OnTouch;
 
 class ItemViewHolder extends RecyclerView.ViewHolder {
 
-//    @BindView(R.id.amount_textView)
-//    TextView amountTextView;
+    @BindView(R.id.amount_textView)
+    TextView amountTextView;
 
     private Item item;
 
@@ -53,7 +53,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
 
     void bindView(Item item) {
         this.item = item;
-//        amountTextView.setText(Double.toString(item.getAmount()));
+        amountTextView.setText(Double.toString(item.getAmount()));
 //        nameEditText.addTextChangedListener(numTextWatcher);
         Log.d("ItemViewHolder", "in bindView");
     }
