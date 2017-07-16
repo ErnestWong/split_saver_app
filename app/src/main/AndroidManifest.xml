@@ -30,7 +30,9 @@
         <activity android:name=".Login.SignupActivity"></activity>
         <activity android:name=".Login.PinActivity"></activity>
         <activity android:name=".ImageActivity" />
-        <activity android:name=".SplitActivity" />
+        <activity android:name=".SplitActivity"
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity android:name=".Transaction.TransactionActivity" />
     </application>
 
