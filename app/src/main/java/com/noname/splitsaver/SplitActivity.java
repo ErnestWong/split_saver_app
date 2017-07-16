@@ -34,7 +34,7 @@ public class SplitActivity extends Activity {
 
     ItemAdapter itemAdapter;
 
-    @BindView(R.id.name_editText)
+    @BindView(R.id.receipt_name_editText)
     EditText nameEditText;
 
     @BindView(R.id.num_items_editText)
