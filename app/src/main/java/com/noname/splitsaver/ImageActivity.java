@@ -92,26 +92,30 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_total_btn)
     void onAddTotalButtonClicked() {
-//        String stringTotal = getOCRResult();
-        String stringTotal = "123.45";
+//        String stringTotal = "123.45";
         try {
+            String stringTotal = getOCRResult();
             this.total = Float.parseFloat(stringTotal);
             Log.d("ImageActivity", String.format("OCR total amount: %f", this.total));
-        } catch (NumberFormatException e) {
+            Toast.makeText(getApplicationContext(), "Successfully added total.", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
+            Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.add_item_btn)
     void onAddItemButtonClicked() {
-//        String stringAmount = getOCRResult();
-        String stringAmount = "12.00";
+//        String stringAmount = "12.00";
         try {
+            String stringAmount = getOCRResult();
             float amount = Float.parseFloat(stringAmount);
             itemAmounts.add(amount);
             Log.d("ImageActivity", String.format("OCR item amount: %f", amount));
+            Toast.makeText(getApplicationContext(), "Successfully added item amount.", Toast.LENGTH_SHORT).show();
         } catch (NumberFormatException e) {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
+            Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 
