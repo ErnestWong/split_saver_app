@@ -10,10 +10,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.nexmo.sdk.verify.client.VerifyClient;
+import com.nexmo.sdk.verify.event.UserObject;
+import com.nexmo.sdk.verify.event.VerifyClientListener;
+import com.nexmo.sdk.verify.event.VerifyError;
 import com.noname.splitsaver.MainActivity;
 import com.noname.splitsaver.MainApplication;
 import com.noname.splitsaver.Network.NetworkManager;
 import com.noname.splitsaver.R;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,11 +115,46 @@ public class PinActivity extends Activity {
     void onCapturedSMS() {
         Log.d(TAG, "onCapturedSMS: ");
         String pin = pinEditText.getText().toString();
+        Log.d(TAG, "PIN IS "+pin);
+
+
+
+
         if (pin.equals("")) { //verify pin
             Toast.makeText(this, "Pin is empty", Toast.LENGTH_SHORT).show();
         } else {
             if (type == TYPE_SIGNUP) {
-                NetworkManager.postCreateUser(postCreateUserCallback, name, phoneNumber);
+                Log.d(TAG, "HERE");
+                VerifyClient verifyClient = MainApplication.getVerifyClient();
+                verifyClient.addVerifyListener(new VerifyClientListener() {
+                    @Override
+                    public void onVerifyInProgress(VerifyClient verifyClient, UserObject user) {
+                        Log.d(TAG, "onVerifyInProgress for number: " + user.getPhoneNumber());
+
+                    }
+
+                    @Override
+                    public void onUserVerified(VerifyClient verifyClient, UserObject user) {
+                        Log.d(TAG, "onUserVerified for number: " + user.getPhoneNumber());
+                        NetworkManager.postCreateUser(postCreateUserCallback, name, phoneNumber);
+                        Log.d(TAG, "User created");
+
+
+                    }
+
+                    @Override
+                    public void onError(VerifyClient verifyClient, VerifyError errorCode, UserObject user) {
+                        Log.d(TAG, "onError: " + errorCode + " for number: " + user.getPhoneNumber());
+
+                    }
+
+                    @Override
+                    public void onException(IOException exception) {
+
+                    }
+                });
+                verifyClient.checkPinCode(pin);
+
             } else if (type == TYPE_LOGIN) {
                 NetworkManager.postLoginUser(postLoginUserCallback, phoneNumber);
             }
