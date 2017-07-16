@@ -3,12 +3,18 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ViewSwitcher
+        android:layout_width="match_parent"
+        android:id="@+id/item_name_viewSwitcher"
+        android:layout_height="match_parent">
+
         <EditText
-        android:id="@+id/name_editText"
+        android:id="@+id/item_name_editText"
         android:layout_width="124dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:hint="Item name"
+        android:imeOptions="actionDone"
         android:textSize="20sp" />
 
     <TextView
