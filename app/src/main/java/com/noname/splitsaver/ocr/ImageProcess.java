@@ -116,7 +116,6 @@ public class ImageProcess {
                 double x = rect.br().x- rect.width;
                 double y = rect.br().y- rect.height;
                 boundingRects.add(new Rect(rect.br(), new Point( rect.br().x-rect.width ,rect.br().y-rect.height)));
-                Log.d("Image Process", String.format("x: %d, y: %d", (int)x, (int)y));
             }
 
 
@@ -148,7 +147,8 @@ public class ImageProcess {
             output.add(combineRects(containedInRect));
         }
 
-        return output;
+
+        return mergeOverlappingRects(output);
     }
 
     private static Rect expandRect(Rect rect, float factor) {
@@ -166,6 +166,9 @@ public class ImageProcess {
         for (Rect rect : input) {
             if (visited.contains(rect)) continue;
             List<Rect> containedInRect = findRectsInRect(input, rect);
+            for (Rect contained : containedInRect) {
+                if (output.contains(contained)) output.remove(contained);
+            }
             visited.addAll(containedInRect);
             containedInRect.add(rect);
             output.add(combineRects(containedInRect));
@@ -181,6 +184,7 @@ public class ImageProcess {
     private static List<Rect> findRectsInRect(List<Rect> rects, Rect rect) {
         List<Rect> output = new ArrayList<Rect>();
         for (Rect r : rects) {
+            if (rect == r) continue;
             if (rect.contains(r.br()) || rect.contains(r.tl())) {
                 output.add(r);
             }
