@@ -63,6 +63,7 @@ public class TessOCR {
 	}
 
 	public String doOCR(Bitmap bmp) {
+        bmp = cleanupImage(bmp);
 		tessAPI.setImage(bmp);
 		String result = tessAPI.getUTF8Text();
 		return result;
@@ -91,5 +92,9 @@ public class TessOCR {
 			}
 		}
 		return stream;
+	}
+
+	private Bitmap cleanupImage(Bitmap bmp) {
+		return bmp;
 	}
 }

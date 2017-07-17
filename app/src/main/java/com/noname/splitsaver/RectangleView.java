@@ -62,12 +62,12 @@ public class RectangleView extends View {
 	 *  Returns scaled version of rectangle based on bitmap dimensions.
 	 **/
 	public Rect getScaledRect(Bitmap bitmap) {
-        int scaledLeft = (int)((float)left / getWidth() * bitmap.getWidth());
-        int scaledRight = (int)((float)right / getWidth() * bitmap.getWidth());
-        int scaledTop = (int)((float)top / getHeight() * bitmap.getHeight());
-        int scaledBottom = (int)((float)bottom / getHeight() * bitmap.getHeight());
+        float scaledLeft = ((float)left / getWidth() * bitmap.getWidth());
+        float scaledRight = ((float)right / getWidth() * bitmap.getWidth());
+        float scaledTop = ((float)top / getHeight() * bitmap.getHeight());
+        float scaledBottom = ((float)bottom / getHeight() * bitmap.getHeight());
 
-        return new Rect(scaledLeft, scaledTop, scaledRight, scaledBottom);
+        return new Rect((int)scaledLeft, (int)scaledTop, (int)scaledRight, (int)scaledBottom);
     }
 
 	public void setPaintColor(int color) {

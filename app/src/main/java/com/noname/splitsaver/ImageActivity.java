@@ -17,7 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.noname.splitsaver.Models.Transaction;
+import com.noname.splitsaver.ocr.ImageProcess;
 import com.noname.splitsaver.ocr.TessOCR;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import java.util.ArrayList;
 
@@ -43,6 +48,34 @@ public class ImageActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_IMAGE_URI, imageUri.toString());
         context.startActivity(intent);
+    }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i("OpenCV", "OpenCV loaded successfully");
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+        } else {
+            Log.d("OpenCV", "OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
     }
 
     @Override
@@ -121,11 +154,12 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.split_btn)
     void onSplitButtonClicked() {
-        if (this.total == null) {
-            Toast.makeText(this, "Please select a total first", Toast.LENGTH_SHORT).show();
-        } else {
-            SplitActivity.startActivity(getApplicationContext(), this.total, itemAmounts);
-        }
+        setBitmap();
+//        if (this.total == null) {
+//            Toast.makeText(this, "Please select a total first", Toast.LENGTH_SHORT).show();
+//        } else {
+//            SplitActivity.startActivity(getApplicationContext(), this.total, itemAmounts);
+//        }
     }
 
 
@@ -146,6 +180,12 @@ public class ImageActivity extends AppCompatActivity {
         imageView.setImageURI(imageUri);
     }
 
+    private void setBitmap() {
+        Rect ocrRect = rectView.getScaledRect(imageBitmap);
+        Bitmap bitmap = cropBitmap(imageBitmap, ocrRect);
+        Bitmap processed = ImageProcess.process(bitmap);
+        imageView.setImageBitmap(processed);
+    }
 
     private String getOCRResult() {
         Rect ocrRect = rectView.getScaledRect(imageBitmap);
