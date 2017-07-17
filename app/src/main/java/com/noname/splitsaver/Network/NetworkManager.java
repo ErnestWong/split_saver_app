@@ -29,4 +29,9 @@ public class NetworkManager {
         Call<ResponseBody> call = service.postLoginUser(phoneNumber);
         call.enqueue(callback);
     }
+
+    public static void postPaymentRequest(Callback<ResponseBody> callback, String phoneNumber, String digitalReceiptId) {
+        Call<ResponseBody> call = service.postPaymentRequest(phoneNumber, digitalReceiptId);
+        call.enqueue(callback);
+    }
 }

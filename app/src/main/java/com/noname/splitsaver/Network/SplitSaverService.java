@@ -15,4 +15,8 @@ public interface SplitSaverService {
     @FormUrlEncoded
     @POST("user/login")
     Call<ResponseBody> postLoginUser(@Field("phoneNumber") String phoneNumber);
+
+    @FormUrlEncoded
+    @POST("user/notify")
+    Call<ResponseBody> postPaymentRequest(@Field("phoneNumber") String phoneNumber, @Field("digitalReceiptId") String digitalReceiptId);
 }

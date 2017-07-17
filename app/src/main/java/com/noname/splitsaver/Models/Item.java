@@ -32,4 +32,6 @@ public class Item {
         return amount;
     }
 
+    public Payee getPayee() { return payee; }
+
 }
