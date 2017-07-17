@@ -9,9 +9,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.nexmo.sdk.verify.client.VerifyClient;
+import com.nexmo.sdk.verify.event.SearchListener;
+import com.nexmo.sdk.verify.event.UserStatus;
+import com.nexmo.sdk.verify.event.VerifyError;
 import com.noname.splitsaver.MainActivity;
 import com.noname.splitsaver.MainApplication;
 import com.noname.splitsaver.R;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.login_btn)
     void onCapturedVerify() {
         Log.d(TAG, "send button clicked");
-        String phoneNumber = phoneEditText.getText().toString();
+        final String  phoneNumber = phoneEditText.getText().toString();
         if (phoneNumber.isEmpty()) {
             Toast.makeText(this, "Name or Phone Number Empty", Toast.LENGTH_SHORT).show();
             return;
@@ -60,9 +65,32 @@ public class LoginActivity extends AppCompatActivity {
         VerifyClient verifyClient = MainApplication.getVerifyClient();
         if (verifyClient != null) {
             try {
-                verifyClient.getVerifiedUser("CA", "1" + phoneNumber);
-                Log.d(TAG, "finished sending phone number");
-                PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
+                verifyClient.getUserStatus("CA", "1" + phoneNumber, new SearchListener() {
+                    @Override
+                    public void onUserStatus(UserStatus userStatus) {
+                        switch (userStatus){
+                            case USER_VERIFIED:{
+                                PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
+
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(VerifyError errorCode, String errorMessage) {
+                        Log.d(TAG, "onError ErrorCode"+errorCode+":"+errorMessage);
+
+                    }
+
+                    @Override
+                    public void onException(IOException exception) {
+
+
+                    }
+                });
+                //verifyClient.getVerifiedUser("CA", "1" + phoneNumber);
+                //Log.d(TAG, "finished sending phone number");
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }

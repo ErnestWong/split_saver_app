@@ -43,6 +43,8 @@ public class SignupActivity extends AppCompatActivity {
         Log.d(TAG, "send button clicked");
         String name = nameEditText.getText().toString();
         String phoneNumber = phoneEditText.getText().toString();
+        Log.d(TAG, "Phone # is "+phoneNumber);
+
         if (name.isEmpty() || phoneNumber.isEmpty()) {
             Toast.makeText(this, "Name or Phone Number Empty", Toast.LENGTH_SHORT).show();
             return;
