@@ -17,8 +17,11 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class ImageProcess {
@@ -135,21 +138,15 @@ public class ImageProcess {
     private static List<Rect> mergeRowRects(List<Rect> input) {
         // merge all who are on same row
         List<Rect> output = new ArrayList<Rect>();
-        List<Rect> toRemove = new ArrayList<Rect>();
-        Log.d("merging row rects", "initial size: " + input.size());
-        for (Rect r1 : input) {
-            Rect expanded = expandRect(r1, 1.5f);
-            for (Rect r2: input) {
-                if (r1 == r2) continue;
-                if (expanded.contains(r2.br()) || expanded.contains(r2.tl())) {
-                    Log.d("merging row rects", "there a mtch");
-                    r1 = combineRect(r1, r2);
-                    toRemove.add(r2);
-                }
-            }
-            output.add(r1);
+        Set<Rect> visited = new HashSet<Rect>();
+        for (Rect rect : input) {
+            if (visited.contains(rect)) continue;
+            Rect expanded = expandRect(rect, 1.5f);
+            List<Rect> containedInRect = findRectsInRect(input, expanded);
+            visited.addAll(containedInRect);
+            containedInRect.add(rect);
+            output.add(combineRects(containedInRect));
         }
-//        output.removeAll(toRemove);
 
         return output;
     }
@@ -163,41 +160,52 @@ public class ImageProcess {
 
     private static List<Rect> mergeOverlappingRects(List<Rect> input) {
         //merge all that  are self contained inside
-        Log.d("merging rects", "initial size: " + input.size());
         List<Rect> output = new ArrayList<Rect>();
-        List<Rect> toRemove = new ArrayList<Rect>();
-        for (Rect r1 : input) {
-            for (Rect r2 : input) {
-                if (r1 == r2) continue;
-                if (r1.contains(r2.br()) || r1.contains(r2.tl())) {
-                    r1 = combineRect(r1, r2);
-                    toRemove.add(r2);
-                }
-            }
-            output.add(r1);
+        Set<Rect> visited = new HashSet<Rect>();
+
+        for (Rect rect : input) {
+            if (visited.contains(rect)) continue;
+            List<Rect> containedInRect = findRectsInRect(input, rect);
+            visited.addAll(containedInRect);
+            containedInRect.add(rect);
+            output.add(combineRects(containedInRect));
         }
 
-        Log.d("merging rects", "before removing size: " + output.size());
-        output.removeAll(toRemove);
-
-        if (input.size() != output.size()) {
+        if (output.size() != input.size()) {
             return mergeOverlappingRects(output);
+        } else {
+            return output;
         }
-        Log.d("merging rects", "final size: " + output.size());
+    }
+
+    private static List<Rect> findRectsInRect(List<Rect> rects, Rect rect) {
+        List<Rect> output = new ArrayList<Rect>();
+        for (Rect r : rects) {
+            if (rect.contains(r.br()) || rect.contains(r.tl())) {
+                output.add(r);
+            }
+        }
         return output;
     }
 
-    private static Rect combineRect(Rect r1, Rect r2) {
-        int startX = r1.x < r2.x ? r1.x : r2.x;
-        int startY = r1.y < r2.y ? r1.y : r2.y;
-        double endX = r1.br().x > r2.br().x ? r1.br().x : r2.br().x;
-        double endY = r1.br().y > r2.br().y ? r1.br().y : r2.br().y;
+    private static Rect combineRects(List<Rect> rects) {
+        int startX = Integer.MAX_VALUE;
+        int startY = Integer.MAX_VALUE;
+        double endX = Integer.MIN_VALUE;
+        double endY = Integer.MIN_VALUE;
+        for (Rect r : rects) {
+            startX = startX < r.x ? startX : r.x;
+            startY = startY < r.y ? startY : r.y;
+            endX = endX > r.br().x ? endX : r.br().x;
+            endY = endY > r.br().y ? endY : r.br().y;
+        }
 
         Point start = new Point(startX, startY);
         Point end = new Point(endX, endY);
 
         return new Rect(start, end);
     }
+
 
 //    public static Bitmap process(Bitmap bitmap) {
 //        System.loadLibrary("opencv_java");

@@ -26,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     private Uri imageUri;
 
-    static {
-        if(!OpenCVLoader.initDebug()){
-            Log.d("OPENCV", "OpenCV not loaded");
-        } else {
-            Log.d("OPENCV", "OpenCV loaded");
-        }
-    }
+//    static {
+//        if(!OpenCVLoader.initDebug()){
+//            Log.d("OPENCV", "OpenCV not loaded");
+//        } else {
+//            Log.d("OPENCV", "OpenCV loaded");
+//        }
+//    }
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
