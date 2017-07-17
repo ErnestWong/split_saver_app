@@ -152,8 +152,8 @@ public class ImageProcess {
     }
 
     private static Rect expandRect(Rect rect, float factor) {
-        Point start = new Point(rect.x - (rect.width), (rect.y));
-        Point end = new Point(rect.br().x + (rect.width), (rect.br().y));
+        Point start = new Point(rect.x - (rect.width*factor), (rect.y));
+        Point end = new Point(rect.br().x + (rect.width*factor), (rect.br().y));
         return new Rect(start, end);
 
     }
