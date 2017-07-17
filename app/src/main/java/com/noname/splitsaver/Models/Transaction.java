@@ -2,6 +2,7 @@ package com.noname.splitsaver.Models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Transaction {
 
@@ -9,7 +10,8 @@ public class Transaction {
     private double totalPrice;
     private Date createDate;
     private Date purchaseDate;
-    private ArrayList<Item> items;
+    private List<Item> items;
+
 
     public Transaction(String name, double totalPrice, Date createDate, Date purchaseDate) {
         this.name = name;
@@ -19,7 +21,15 @@ public class Transaction {
         items = new ArrayList<Item>();
     }
 
-    public ArrayList<Item> addItem(Item item) {
+    public Transaction(String name, double totalPrice, Date createDate, Date purchaseDate, List<Item> items) {
+        this.name = name;
+        this.totalPrice = totalPrice;
+        this.createDate = createDate;
+        this.purchaseDate = purchaseDate;
+        this.items = items;
+    }
+
+    public List<Item> addItem(Item item) {
         items.add(item);
         return items;
     }
