@@ -23,7 +23,7 @@ import butterknife.OnClick;
 
 public class TransactionDetailsActivity extends AppCompatActivity {
 
-    private static final String TAG = "TransactionDetailsActivity";
+    private static final String TAG = "TransDetailsActivity";
     String transactionId;
     String json;
 
