@@ -24,11 +24,7 @@ class TransactionViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.transaction_create_date)
     TextView createDate;
 
-    @BindView(R.id.transaction_purchase_date)
-    TextView purchaseDate;
-
     private SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMM d", Locale.CANADA);
-    private SimpleDateFormat monthDayYearFormat = new SimpleDateFormat("MMM d, yyyy", Locale.CANADA);
 
     TransactionViewHolder(View view) {
         super(view);
@@ -38,7 +34,6 @@ class TransactionViewHolder extends RecyclerView.ViewHolder {
     void bindView(Transaction transaction) {
         name.setText(transaction.getName());
         totalPrice.setText(String.format("price $%.2f", transaction.getTotalPrice()));
-        purchaseDate.setText(monthDayYearFormat.format(transaction.getPurchaseDate()));
-        createDate.setText(monthDayFormat.format(transaction.getCreateDate()));
+//        createDate.setText(monthDayFormat.format(transaction.getCreateDate()));
     }
 }

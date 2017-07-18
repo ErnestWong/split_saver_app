@@ -1,87 +1,100 @@
 package com.noname.splitsaver.Item;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.InputType;
+import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.noname.splitsaver.Models.Item;
-import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import com.noname.splitsaver.Utils.DecimalDigitsInputFilter;
+import com.noname.splitsaver.Utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
-import butterknife.OnTouch;
 
-class ItemViewHolder extends RecyclerView.ViewHolder {
+class ItemNameViewHolder extends ItemViewHolder {
 
     @BindView(R.id.amount_textView)
     TextView amountTextView;
 
-    private Item item;
+    ItemNameViewHolder(View view, Context context) {
+        super(view, context);
+    }
+
+    @Override
+    void bindView(Item item) {
+        super.bindView(item);
+        amountTextView.setText(Utils.displayPrice(context, item.getAmount()));
+    }
+}
+
+class ItemEmptyViewHolder extends ItemViewHolder {
+
+    @BindView(R.id.amount_editText)
+    EditText amountEditText;
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String amountString = charSequence.toString();
+            if (!amountString.isEmpty()) {
+                float amount = Float.valueOf(amountString);
+                item.setAmount(amount);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    ItemEmptyViewHolder(View view, Context context) {
+        super(view, context);
+    }
+
+    @Override
+    void bindView(final Item item) {
+        super.bindView(item);
+        amountEditText.addTextChangedListener(textWatcher);
+        amountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
+    }
+}
+
+class ItemViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.item_name_editText)
     EditText nameEditText;
 
-    @BindView(R.id.item_name_textView)
-    TextView nameTextView;
+    Context context;
+    Item item;
 
-    @BindView(R.id.item_name_viewSwitcher)
-    ViewSwitcher nameViewSwitcher;
-
-    ItemViewHolder(View view) {
+    ItemViewHolder(View view, Context context) {
         super(view);
         ButterKnife.bind(this, view);
-        nameEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        nameEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        Log.d("ItemViewHolder", "in constructor");
+        this.context = context;
     }
 
     void bindView(Item item) {
         this.item = item;
-        amountTextView.setText(Double.toString(item.getAmount()));
-//        nameEditText.addTextChangedListener(numTextWatcher);
-        Log.d("ItemViewHolder", "in bindView");
     }
 
-    @OnEditorAction(R.id.item_name_editText)
-    boolean onNameTextChanged(int actionId, KeyEvent event) {
-        Log.d("itemViewHandler", "action: " + String.valueOf(actionId));
-        String itemName = nameEditText.getText().toString().trim();
-        if (actionId == EditorInfo.IME_ACTION_DONE && itemName.length() > 0) {
-            Log.d("ItemViewHandler", "name: " + itemName);
-            nameEditText.setEnabled(false);
-            if (nameViewSwitcher.getCurrentView().equals(nameEditText)) {
-                nameTextView.setText(itemName);
-                nameViewSwitcher.showNext();
-            }
+    @OnTextChanged(R.id.item_name_editText)
+    void onTextChanged(CharSequence text) {
+        String itemName = text.toString().trim();
+        if (!itemName.isEmpty()) {
             item.setName(itemName);
-            // set item name to whatever is in the edittext
         }
-        return true;
-    }
-
-    @OnTouch(R.id.item_name_textView)
-    boolean onTouchTextView() {
-        Log.d("itemViewHOlder", "touched textview");
-        if (nameViewSwitcher.getCurrentView().equals(nameTextView)) {
-            nameViewSwitcher.showNext();
-            nameEditText.setEnabled(true);
-        }
-        return true;
     }
 }
