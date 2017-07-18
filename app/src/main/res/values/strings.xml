@@ -7,5 +7,6 @@
     <string name="sign_up">SIGN UP</string>
     <string name="verify">VERIFY</string>
     <string name="logout">LOGOUT</string>
+    <string name="send_reminder">SEND REMINDERS</string>
     <string name="sign_up_now"><u>SIGN UP NOW</u></string>
 </resources>
