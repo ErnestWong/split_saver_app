@@ -28,6 +28,7 @@ import com.noname.splitsaver.Utils.AssignmentListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,11 +59,15 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
             if (response.isSuccessful()) {
                 if (response.code() == 200) {
                     Log.d(TAG, "onResponse: 200 - " + response.body());
+                    MainActivity.startActivity(getApplicationContext());
+                    finish();
                 } else {
                     Log.e(TAG, "onResponse: " + response.body());
+                    Toast.makeText(getApplicationContext(), "Create Digital Receipt Failed", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Log.e(TAG, "onResponse: failed - " + response.errorBody());
+                Toast.makeText(getApplicationContext(), "Create Digital Receipt Failed", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -75,7 +80,6 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
     private List<Payee> payees;
     private List<Item> items;
     private PayeeRecyclerViewAdapter payeeRecyclerViewAdapter;
-    private Payee selectedPayee;
     private float assignedAmount;
 
     public static void startActivity(Context context, Transaction transaction) {
@@ -105,7 +109,11 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
     @OnClick(R.id.send_transaction_btn)
     void onSendButtonClicked() {
         if (!payees.isEmpty()) {
-            transaction.setPayees(payees);
+            HashMap<String, Payee> payeeMap = new HashMap<>();
+            for (Payee payee : payees) {
+                payeeMap.put(payee.getNumber(), payee);
+            }
+            transaction.setPayees(payeeMap);
             NetworkManager.postCreateDigitalReceipt(postCreateDigitalReceiptCallback, transaction);
         }
     }
