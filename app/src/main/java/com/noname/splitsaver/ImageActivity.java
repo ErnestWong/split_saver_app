@@ -1,6 +1,8 @@
 package com.noname.splitsaver;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -10,13 +12,11 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.ocr.TessOCR;
 
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ import butterknife.OnTouch;
 
 public class ImageActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "extraImageUri";
-    public static final String EXTRA_TOTAL_AMOUNT = "extraTotalAmount";
     public static RectangleView rectView;
     private TessOCR tessOCR;
     private Bitmap imageBitmap;
@@ -37,6 +36,8 @@ public class ImageActivity extends AppCompatActivity {
 
     @BindView(R.id.image_view)
     ImageView imageView;
+    @BindView(R.id.root_layout)
+    RelativeLayout rootLayout;
 
     public static void startActivity(Context context, Uri imageUri) {
         Intent intent = new Intent(context, ImageActivity.class);
@@ -50,13 +51,11 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
-        itemAmounts = new ArrayList<Float>();
+        itemAmounts = new ArrayList<>();
 
-        final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.imagesurfaceview);
-        final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
         tessOCR = new TessOCR(this);
         rectView = new RectangleView(this);
-        relativeLayout.addView(rectView);
+        rootLayout.addView(rectView);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_IMAGE_URI)) {
@@ -70,7 +69,7 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
-    @OnTouch(R.id.imagesurfaceview)
+    @OnTouch(R.id.image_surface_view)
     boolean onTouch(View v, MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
@@ -92,12 +91,11 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_total_btn)
     void onAddTotalButtonClicked() {
-//        String stringTotal = "123.45";
         try {
             String stringTotal = getOCRResult();
-            this.total = Float.parseFloat(stringTotal);
-            Log.d("ImageActivity", String.format("OCR total amount: %f", this.total));
-            Toast.makeText(getApplicationContext(), "Successfully added total.", Toast.LENGTH_SHORT).show();
+            total = Float.parseFloat(stringTotal);
+            Log.d("ImageActivity", String.format("OCR total amount: %f", total));
+            Toast.makeText(getApplicationContext(), "Successfully added total: " + total, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
             Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
@@ -106,14 +104,30 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_item_btn)
     void onAddItemButtonClicked() {
-//        String stringAmount = "12.00";
         try {
             String stringAmount = getOCRResult();
-            float amount = Float.parseFloat(stringAmount);
-            itemAmounts.add(amount);
+            final float amount = Float.parseFloat(stringAmount);
             Log.d("ImageActivity", String.format("OCR item amount: %f", amount));
-            Toast.makeText(getApplicationContext(), "Successfully added item amount.", Toast.LENGTH_SHORT).show();
-        } catch (NumberFormatException e) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add line item?")
+                    .setMessage("Is this the correct value: " + amount)
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            itemAmounts.add(amount);
+                            Toast.makeText(getApplicationContext(), "Successfully added item amount: " + amount, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(getApplicationContext(), "Item not added.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .show();
+
+        } catch (Exception e) {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
             Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
         }
@@ -161,10 +175,11 @@ public class ImageActivity extends AppCompatActivity {
 
     /**
      * Removes spaces or dollar signs from the OCR string.
+     *
      * @param result
      * @return
      */
     private String cleanup(String result) {
-        return result.replaceAll("\\s+","").replaceAll("\\$", "");
+        return result.replaceAll("\\s+", "").replaceAll("\\$", "");
     }
 }

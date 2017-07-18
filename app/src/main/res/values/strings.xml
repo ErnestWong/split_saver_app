@@ -9,4 +9,6 @@
     <string name="logout">LOGOUT</string>
     <string name="send_reminder">SEND REMINDERS</string>
     <string name="sign_up_now"><u>SIGN UP NOW</u></string>
+    <string name="transaction_total" formatted="false">Total: $%.2f of $%.2f</string>
+    <string name="format_price" formatted="false">$%s</string>
 </resources>

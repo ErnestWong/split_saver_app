@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Permission has to be GRANTED -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -30,9 +31,10 @@
         <activity android:name=".Login.SignupActivity"></activity>
         <activity android:name=".Login.PinActivity"></activity>
         <activity android:name=".ImageActivity" />
-        <activity android:name=".SplitActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
+        <activity
+            android:name=".SplitActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".AssignmentActivity" />
         <activity android:name=".Transaction.TransactionActivity" />
     </application>
 

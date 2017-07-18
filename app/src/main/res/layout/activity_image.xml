@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativelayout"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <SurfaceView
-        android:id="@+id/imagesurfaceview"
+        android:id="@+id/image_surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -15,31 +15,36 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/image_view" />
 
-    <Button
-        android:id="@+id/split_btn"
-        android:layout_width="120dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="46dp"
-        android:text="SPLIT BILL"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
-        android:id="@+id/add_item_btn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:text="ADD ITEM"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+            android:id="@+id/add_item_btn"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:text="ADD ITEM" />
+
 
         <Button
-        android:id="@+id/add_total_btn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="150dp"
-        android:text="ADD TOTAL"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+            android:id="@+id/add_total_btn"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:text="ADD TOTAL" />
+
+        <Button
+            android:id="@+id/split_btn"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:text="SPLIT BILL" />
+
+    </LinearLayout>
 
 </RelativeLayout>
