@@ -1,15 +1,22 @@
 package com.noname.splitsaver.Transaction;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.noname.splitsaver.Models.Transaction;
+import com.noname.splitsaver.Network.NetworkManager;
 import com.noname.splitsaver.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 class TransactionAdapter extends RecyclerView.Adapter {
 
@@ -21,23 +28,22 @@ class TransactionAdapter extends RecyclerView.Adapter {
     }
 
     private void getData() {
-//        Callback<JsonObject> callback = new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                if (response.isSuccessful()) {
-//                    String jsonString = response.body().toString();
-//                    Log.d("DAVID", "onResponse: " + jsonString);
-//                } else {
-//                    Log.d("DAVID", "onResponse: " + response.errorBody());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> call, Throwable t) {
-//                t.printStackTrace();
-//            }
-//        };
-//        NetworkManager.getAllItems(callback);
+        Callback<Transaction> callback = new Callback<Transaction>() {
+            @Override
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                if (response.isSuccessful()) {
+                    Log.d("DAVID", "onResponse: " + response.body());
+                } else {
+                    Log.d("DAVID", "onResponse: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Transaction> call, Throwable t) {
+                t.printStackTrace();
+            }
+        };
+        NetworkManager.getDigitalReceipts(callback);
     }
 
     private void populateDummyData() {

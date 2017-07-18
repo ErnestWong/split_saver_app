@@ -61,4 +61,9 @@ public class NetworkManager {
         Call<ResponseBody> call = service.postCreateDigitalReceipt(transaction);
         call.enqueue(callback);
     }
+
+    public static void getDigitalReceipts(Callback<Transaction> callback) {
+        Call<Transaction> call = service.getDigitalReceipts();
+        call.enqueue(callback);
+    }
 }
