@@ -61,6 +61,11 @@ public class NetworkManager {
         Call<ResponseBody> call = service.postPaymentRequest(phoneNumber, digitalReceiptId);
         call.enqueue(callback);
     }
+
+    public static void postBulkPaymentRequest(Callback<ResponseBody> callback, String digitalReceiptId) {
+        Call<ResponseBody> call = service.postBulkPaymentRequest(digitalReceiptId);
+        call.enqueue(callback);
+    }
   
     public static void postCreateDigitalReceipt(Callback<ResponseBody> callback, Transaction transaction) {
         Call<ResponseBody> call = service.postCreateDigitalReceipt(transaction);

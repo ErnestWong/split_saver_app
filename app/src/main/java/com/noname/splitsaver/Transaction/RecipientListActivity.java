@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +63,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         payeeListView.setAdapter(payeeAdapter);
 
         payeeListView.setOnItemClickListener(this);
+        ButterKnife.bind(this);
     }
 
     Callback<ResponseBody> postPaymentRequest = new Callback<ResponseBody>() {
@@ -87,6 +90,13 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         NetworkManager.postPaymentRequest(postPaymentRequest, payee, transactionId);
         Toast.makeText(this,"Sending reminder to " + payee , Toast.LENGTH_LONG).show();
 
+    }
+
+    @OnClick(R.id.send_all_btn)
+    void onSendReminderClicked() {
+        Log.d(TAG, "send all reminder  button clicked");
+        NetworkManager.postBulkPaymentRequest(postPaymentRequest, transactionId);
+        Toast.makeText(this,"Sending to all for transaction id: " + transactionId , Toast.LENGTH_LONG).show();
     }
 
     private ArrayList<String> convertToString(List<Payee> payees) {
