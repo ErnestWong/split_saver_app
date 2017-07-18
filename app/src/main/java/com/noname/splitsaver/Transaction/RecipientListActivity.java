@@ -86,6 +86,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String payee = (String) parent.getItemAtPosition(position);
         // Send to server
+        Log.d(TAG, "Sending post reminder with: payee: "+ payee +", transactionId: " + transactionId);
         NetworkManager.postPaymentRequest(postPaymentRequest, payee, transactionId);
         Toast.makeText(this,"Sending reminder to " + payee , Toast.LENGTH_LONG).show();
 

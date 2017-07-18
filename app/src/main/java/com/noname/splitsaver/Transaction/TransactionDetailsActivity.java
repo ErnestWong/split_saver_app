@@ -39,11 +39,14 @@ public class TransactionDetailsActivity extends AppCompatActivity {
 
         //Append to name
         TextView name = (TextView) findViewById(R.id.TransactionName);
-        name.setText("Name: " + getFieldFromJson(transactionJson, "name"));
+        String nameText = "Name: " + getFieldFromJson(transactionJson, "name");
+        name.setText(nameText);
 
         // Append to total
         TextView total =(TextView)findViewById(R.id.TransactionTotal);
-        total.setText("Total: " + getFieldFromJson(transactionJson, "total"));
+        String totalText = "Total: " + getFieldFromJson(transactionJson, "total");
+        total.setText(totalText);
+
         ButterKnife.bind(this);
     }
 
@@ -54,13 +57,13 @@ public class TransactionDetailsActivity extends AppCompatActivity {
     }
 
     private String getFieldFromJson(String json, String fieldName) {
-        String total = "";
+        String result = "";
         try {
             JSONObject transactionObj = new JSONObject(json);
-            total = transactionObj.getString(fieldName);
+            result = transactionObj.getString(fieldName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return total;
+        return result;
     }
 }

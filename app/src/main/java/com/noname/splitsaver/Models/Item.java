@@ -48,8 +48,6 @@ public class Item implements Serializable {
         this.amount = amount;
     }
 
-    public Payee getPayee() { return payee; }
-
     public int getType() {
         return type;
     }
