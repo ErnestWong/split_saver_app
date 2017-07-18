@@ -68,8 +68,10 @@ public class LoginActivity extends AppCompatActivity {
                 verifyClient.getUserStatus("CA", "1" + phoneNumber, new SearchListener() {
                     @Override
                     public void onUserStatus(UserStatus userStatus) {
+                        Log.d(TAG, "CHECKING IF VERIFIED");
                         switch (userStatus){
                             case USER_VERIFIED:{
+                                Log.d(TAG, "USER IS VERIFIED");
                                 PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
 
 

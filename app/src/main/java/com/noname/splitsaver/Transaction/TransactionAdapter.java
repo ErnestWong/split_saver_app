@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.google.gson.JsonObject;
 import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.Network.NetworkManager;
+import com.noname.splitsaver.Network.SplitSaverService;
 import com.noname.splitsaver.R;
 
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
 
 class TransactionAdapter extends RecyclerView.Adapter {
     private static final String TAG = "TransactionAdapter";
@@ -30,7 +34,41 @@ class TransactionAdapter extends RecyclerView.Adapter {
         getData();
     }
 
+    private static String baseUrl = "http://split-saver.herokuapp.com/";
+    private static SplitSaverService service;
+
+
     private void getData() {
+
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .baseUrl(baseUrl)
+//                .build();
+//
+//        service = retrofit.create(SplitSaverService.class);
+//
+//        Call<ResponseBody> result = service.getUserTransactions();
+//        result.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                if(response.isSuccessful()){
+//                    Log.d(TAG, "RESPONSE IS"+response.body().toString());
+//                }else{
+//                    Log.d(TAG,"ERROR: "+response.message());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//            }
+
+
+        //String json = retrofitService().getInfo().execute().body().string();
+
+
+
         Callback<ResponseBody> callback = new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -104,7 +104,7 @@ public class PinActivity extends Activity {
     }
 
     public static void startActivityAsLogin(Context context, String phoneNumber) {
-        Intent intent = new Intent(context, PinActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_PHONE, phoneNumber);
         intent.putExtra(EXTRA_TYPE, TYPE_LOGIN);
