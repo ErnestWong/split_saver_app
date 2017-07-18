@@ -56,7 +56,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_send_view);
 
-        ArrayList<Payee> payees = getPayeesFromJSON(transactionJson);
+        ArrayList<String> payees = getPayeesFromJSON(transactionJson);
 
         ListAdapter payeeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, payees);
         ListView payeeListView = (ListView) findViewById(R.id.payeeList);
@@ -84,15 +84,15 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Payee payee = (Payee) parent.getItemAtPosition(position);
+        String payee = (String) parent.getItemAtPosition(position);
         // Send to server
-        NetworkManager.postPaymentRequest(postPaymentRequest, payee.getNumber(), transactionId);
-        Toast.makeText(this,"Sending reminder to " + payee.getNumber() , Toast.LENGTH_LONG).show();
+        NetworkManager.postPaymentRequest(postPaymentRequest, payee, transactionId);
+        Toast.makeText(this,"Sending reminder to " + payee , Toast.LENGTH_LONG).show();
 
     }
 
-    private ArrayList<Payee> getPayeesFromJSON(JSONObject json) {
-        ArrayList<Payee> payees = new ArrayList<>();
+    private ArrayList<String> getPayeesFromJSON(JSONObject json) {
+        ArrayList<String> payees = new ArrayList<>();
         try {
             JSONObject users = json.getJSONObject("associatedUsers");
             Iterator<?> keys = users.keys();
@@ -100,7 +100,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
             while(keys.hasNext()) {
                 String key = (String)keys.next();
                 if (users.get(key) instanceof JSONObject) {
-                    payees.add(new Payee("", key)); // name not received in the server response
+                    payees.add(key); // name not received in the server response
                 }
             }
         } catch (JSONException e) {
