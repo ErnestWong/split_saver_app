@@ -6,12 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nexmo.sdk.verify.client.VerifyClient;
-import com.noname.splitsaver.Login.PinActivity;
-import com.noname.splitsaver.Login.SignupActivity;
-import com.noname.splitsaver.MainApplication;
 import com.noname.splitsaver.R;
 
 import org.json.JSONException;
@@ -42,8 +37,13 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_details_view);
 
+        //Append to name
+        TextView name = (TextView) findViewById(R.id.TransactionName);
+        name.setText("Name: " + getFieldFromJson(transactionJson, "name"));
+
+        // Append to total
         TextView total =(TextView)findViewById(R.id.TransactionTotal);
-        total.append(getTotalFromJson(transactionJson));
+        total.setText("Total: " + getFieldFromJson(transactionJson, "total"));
         ButterKnife.bind(this);
     }
 
@@ -53,11 +53,11 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         RecipientListActivity.startActivity(getApplicationContext(), transactionId, transactionJson);
     }
 
-    private String getTotalFromJson(String json) {
+    private String getFieldFromJson(String json, String fieldName) {
         String total = "";
         try {
             JSONObject transactionObj = new JSONObject(json);
-            total = transactionObj.getString("total");
+            total = transactionObj.getString(fieldName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
