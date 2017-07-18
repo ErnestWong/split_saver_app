@@ -64,7 +64,7 @@ public class SplashActivity extends Activity {
         protected void onPostExecute(Void ready) {
             super.onPostExecute(ready);
             // start main activity
-            MainActivity.startActivity(getApplicationContext());
+            LoginActivity.startActivity(getApplicationContext());
             finish();
         }
 

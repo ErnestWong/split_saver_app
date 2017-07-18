@@ -13,7 +13,6 @@ import com.noname.splitsaver.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,10 +27,11 @@ class TransactionAdapter extends RecyclerView.Adapter {
     }
 
     private void getData() {
-        Callback<Transaction> callback = new Callback<Transaction>() {
+        Callback<List<Transaction>> callback = new Callback<List<Transaction>>() {
             @Override
-            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
                 if (response.isSuccessful()) {
+                    List<Transaction> transactionList = response.body();
                     Log.d("DAVID", "onResponse: " + response.body());
                 } else {
                     Log.d("DAVID", "onResponse: " + response.errorBody());
@@ -39,7 +39,7 @@ class TransactionAdapter extends RecyclerView.Adapter {
             }
 
             @Override
-            public void onFailure(Call<Transaction> call, Throwable t) {
+            public void onFailure(Call<List<Transaction>> call, Throwable t) {
                 t.printStackTrace();
             }
         };

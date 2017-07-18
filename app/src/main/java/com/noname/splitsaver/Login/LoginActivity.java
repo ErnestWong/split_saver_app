@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.login_btn)
     void onCapturedVerify() {
         Log.d(TAG, "send button clicked");
-        final String  phoneNumber = phoneEditText.getText().toString();
+        final String phoneNumber = phoneEditText.getText().toString();
         if (phoneNumber.isEmpty()) {
             Toast.makeText(this, "Name or Phone Number Empty", Toast.LENGTH_SHORT).show();
             return;
@@ -68,29 +68,23 @@ public class LoginActivity extends AppCompatActivity {
                 verifyClient.getUserStatus("CA", "1" + phoneNumber, new SearchListener() {
                     @Override
                     public void onUserStatus(UserStatus userStatus) {
-                        switch (userStatus){
-                            case USER_VERIFIED:{
+                        switch (userStatus) {
+                            case USER_VERIFIED: {
                                 PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
-
-
                             }
                         }
                     }
 
                     @Override
                     public void onError(VerifyError errorCode, String errorMessage) {
-                        Log.d(TAG, "onError ErrorCode"+errorCode+":"+errorMessage);
-
+                        Log.d(TAG, "onError ErrorCode" + errorCode + ":" + errorMessage);
                     }
 
                     @Override
                     public void onException(IOException exception) {
-
-
+                        Log.e(TAG, "onException: ", exception);
                     }
                 });
-                //verifyClient.getVerifiedUser("CA", "1" + phoneNumber);
-                //Log.d(TAG, "finished sending phone number");
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }

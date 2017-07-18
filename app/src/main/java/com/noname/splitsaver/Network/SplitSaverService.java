@@ -2,6 +2,8 @@ package com.noname.splitsaver.Network;
 
 import com.noname.splitsaver.Models.Transaction;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -24,5 +26,5 @@ public interface SplitSaverService {
     Call<ResponseBody> postCreateDigitalReceipt(@Body Transaction transaction);
 
     @GET("digitalreceipt/")
-    Call<Transaction> getDigitalReceipts();
+    Call<List<Transaction>> getDigitalReceipts();
 }
