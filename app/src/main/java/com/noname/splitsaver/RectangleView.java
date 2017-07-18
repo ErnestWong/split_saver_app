@@ -51,6 +51,14 @@ public class RectangleView extends View {
 
 	}
 
+	public void reset() {
+        this.left = 0;
+        this.right = 0;
+        this.bottom = 0;
+        this.top = 0;
+        this.invalidate();
+    }
+
 
 	public boolean drawn() {
 		return !(right == 0 && left == 0 && top == 0 && bottom == 0);

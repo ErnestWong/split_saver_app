@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -56,11 +57,68 @@ public class ImageActivity extends AppCompatActivity {
     @BindView(R.id.image_view)
     ImageView imageView;
 
+    @BindView(R.id.select_rect_btn)
+    Button selectRectButton;
+
+    @BindView(R.id.cancel_btn)
+    Button cancelButton;
+
+    @BindView(R.id.add_item_btn)
+    Button addItemButton;
+
+    @BindView(R.id.add_total_btn)
+    Button addTotalButton;
+
+    @BindView(R.id.save_receipt_btn)
+    Button saveReceiptButton;
+
     public static void startActivity(Context context, Uri imageUri) {
         Intent intent = new Intent(context, ImageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_IMAGE_URI, imageUri.toString());
         context.startActivity(intent);
+    }
+
+    private void setTouchMode(TouchMode mode) {
+        this.mode = mode;
+        showCorrespondingButtons();
+    }
+
+    private void showCorrespondingButtons() {
+        switch (this.mode) {
+            case SELECT_ITEM_TOTAL_MODE:
+                // cancel button, save button, add total button, select item button
+                cancelButton.setVisibility(View.VISIBLE);
+                saveReceiptButton.setVisibility(View.VISIBLE);
+                addTotalButton.setVisibility(View.VISIBLE);
+                addItemButton.setVisibility(View.VISIBLE);
+                selectRectButton.setVisibility(View.GONE);
+                break;
+            case SELECT_ITEM_MODE:
+                // cancel button, save button, add total button, select item button
+                cancelButton.setVisibility(View.VISIBLE);
+                saveReceiptButton.setVisibility(View.VISIBLE);
+                addTotalButton.setVisibility(View.VISIBLE);
+                addItemButton.setVisibility(View.VISIBLE);
+                selectRectButton.setVisibility(View.GONE);
+                break;
+            case SELECT_TOTAL_MODE:
+                // cancel button, save button, add total button, select item button
+                cancelButton.setVisibility(View.VISIBLE);
+                saveReceiptButton.setVisibility(View.VISIBLE);
+                addTotalButton.setVisibility(View.VISIBLE);
+                addItemButton.setVisibility(View.VISIBLE);
+                selectRectButton.setVisibility(View.GONE);
+                break;
+            case SELECT_RECT_MODE:
+                // cancel button, select button
+                cancelButton.setVisibility(View.VISIBLE);
+                selectRectButton.setVisibility(View.VISIBLE);
+                saveReceiptButton.setVisibility(View.GONE);
+                addTotalButton.setVisibility(View.GONE);
+                addItemButton.setVisibility(View.GONE);
+                break;
+        }
     }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -97,7 +155,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
         itemAmounts = new ArrayList<Float>();
-        mode = TouchMode.SELECT_RECT_MODE;
+        setTouchMode(TouchMode.SELECT_RECT_MODE);
 
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.imagesurfaceview);
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
@@ -131,31 +189,7 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
-    private Point getScaledCoordinates(int eventX, int eventY) {
-        float[] eventXY = new float[] {eventX, eventY};
 
-        Matrix invertMatrix = new Matrix();
-        imageView.getImageMatrix().invert(invertMatrix);
-
-        invertMatrix.mapPoints(eventXY);
-        int x = Integer.valueOf((int)eventXY[0]);
-        int y = Integer.valueOf((int)eventXY[1]);
-
-        return new Point(x, y);
-
-    }
-
-    private String findSelectedRegionAmount(int x, int y) {
-        Point point = getScaledCoordinates(x, y);
-
-        for (OCRRegion region : ocrRegions) {
-            org.opencv.core.Rect r = region.getRect();
-            if (r.contains(point)) {
-                return region.getOCR();
-            }
-        }
-        return  null;
-    }
 
     boolean handleSelectItemModeTouch(View v, MotionEvent event) {
         int x = (int) event.getX();
@@ -209,14 +243,12 @@ public class ImageActivity extends AppCompatActivity {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 rectView.setTopLeft(x, y);
-                Log.i("TAG", "touched down: (" + x + ", " + y + ")");
                 break;
             case MotionEvent.ACTION_MOVE:
                 rectView.setBottomRight(x, y);
                 break;
             case MotionEvent.ACTION_UP:
                 rectView.setBottomRight(x, y);
-                Log.i("TAG", "touched up: (" + x + ", " + y + ")");
                 break;
         }
         return true;
@@ -224,61 +256,45 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_total_btn)
     void onAddTotalButtonClicked() {
-        mode = TouchMode.SELECT_TOTAL_MODE;
-        /*
-        try {
-            String stringTotal = getOCRResult();
-            this.total = Float.parseFloat(stringTotal);
-            Log.d("ImageActivity", String.format("OCR total amount: %f", this.total));
-            Toast.makeText(getApplicationContext(), "Successfully added total.", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e("ImageActivity", "onSplitButtonClicked: ", e);
-            Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
-        }
-        */
+        setTouchMode(TouchMode.SELECT_TOTAL_MODE);
     }
 
     @OnClick(R.id.add_item_btn)
     void onAddItemButtonClicked() {
-        mode = TouchMode.SELECT_ITEM_MODE;
-        /*
-        try {
-            String stringAmount = getOCRResult();
-            float amount = Float.parseFloat(stringAmount);
-            itemAmounts.add(amount);
-            Log.d("ImageActivity", String.format("OCR item amount: %f", amount));
-            showToast("Successfully added item amount.");
-        } catch (NumberFormatException e) {
-            Log.e("ImageActivity", "onSplitButtonClicked: ", e);
-            showToast("Error while processing OCR. Please try again.");
-        }
-        */
+        setTouchMode(TouchMode.SELECT_ITEM_MODE);
     }
 
-    @OnClick(R.id.split_btn)
-    // TEMP to allow select rectangle
-    void onSplitButtonClicked()  {
+    @OnClick(R.id.select_rect_btn)
+    void onSelectRectButtonClicked()  {
         if (rectView.drawn()) {
+            setTouchMode(TouchMode.SELECT_ITEM_TOTAL_MODE);
             subBitmap = cropBitmap(receiptBitmap, rectView.getScaledRect(receiptBitmap));
             ImageProcess imgProcess = new ImageProcess(subBitmap, tessOCR);
             subBitmap = imgProcess.getBitmap();
             ocrRegions = imgProcess.getOcrRegions();
+            rectView.reset();
             setImageView(subBitmap);
         } else {
             showToast("Please draw a rectangle  first.");
         }
     }
 
-    /*
-    void onSplitButtonClicked() {
-        if (this.total == null) {
-            Toast.makeText(this, "Please select a total first", Toast.LENGTH_SHORT).show();
+    @OnClick(R.id.cancel_btn)
+    void onCancelButtonClicked() {
+        rectView.reset();
+        setImageView(receiptBitmap);
+        setTouchMode(TouchMode.SELECT_RECT_MODE);
+        resetItemTotals();
+    }
+
+    @OnClick(R.id.save_receipt_btn)
+    void onReceiptSaveButtonClicked() {
+        if (this.total != null) {
+            // TODO: save the receipt
         } else {
-            SplitActivity.startActivity(getApplicationContext(), this.total, itemAmounts);
+            showToast("Please select a total first");
         }
     }
-    */
-
 
     /**
      * Crop bitmap based on Rect dimensions.
@@ -301,21 +317,39 @@ public class ImageActivity extends AppCompatActivity {
         imageView.setImageBitmap(bitmap);
     }
 
-    /*
-    private String getOCRResult() {
-        Rect ocrRect = rectView.getScaledRect(imageBitmap);
-        Bitmap bitmap = cropBitmap(imageBitmap, ocrRect);
-
-        if (!tessOCR.isInit()) {
-            tessOCR.initOCR();
-        }
-        String result = tessOCR.doOCR(bitmap);
-        Log.d("imageActivity", "OCR image result: " + result);
-        return cleanup(result);
-    }
-    */
-
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private Point getScaledCoordinates(int eventX, int eventY) {
+        float[] eventXY = new float[] {eventX, eventY};
+
+        Matrix invertMatrix = new Matrix();
+        imageView.getImageMatrix().invert(invertMatrix);
+
+        invertMatrix.mapPoints(eventXY);
+        int x = Integer.valueOf((int)eventXY[0]);
+        int y = Integer.valueOf((int)eventXY[1]);
+
+        return new Point(x, y);
+
+    }
+
+    private String findSelectedRegionAmount(int x, int y) {
+        Point point = getScaledCoordinates(x, y);
+
+        for (OCRRegion region : ocrRegions) {
+            org.opencv.core.Rect r = region.getRect();
+            if (r.contains(point)) {
+                return region.getOCR();
+            }
+        }
+        return  null;
+    }
+
+    private void resetItemTotals() {
+        this.total = null;
+        this.itemAmounts.clear();
+        ocrRegions.clear();
     }
 }
