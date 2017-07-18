@@ -4,14 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.noname.splitsaver.Item.ItemRecyclerViewAdapter;
+import com.noname.splitsaver.Models.Item;
+import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -22,14 +32,31 @@ import butterknife.OnClick;
 public class TransactionDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "TransDetailsActivity";
-    private static String transactionId;
-    private static String transactionJson;
+    private static Transaction transaction;
 
-    public static void startActivity(Context context, String id, String json) {
-        transactionId = id;
-        transactionJson = json;
+    @BindView(R.id.details_item_view)
+    RecyclerView recyclerView;
+
+    private List<Item> lineItems = new ArrayList<>();
+
+    ItemRecyclerViewAdapter itemRecyclerViewAdapter;
+
+    public static void startActivity(Context context, Transaction t) {
+        transaction = t;
         Intent intent = new Intent(context, TransactionDetailsActivity.class);
         context.startActivity(intent);
+    }
+
+    private void setupRecyclerView() {
+        lineItems = transaction.getItems();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        itemRecyclerViewAdapter = new ItemRecyclerViewAdapter(getApplicationContext(), lineItems);
+        recyclerView.setAdapter(itemRecyclerViewAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     @Override
@@ -39,12 +66,14 @@ public class TransactionDetailsActivity extends AppCompatActivity {
 
         //Append to name
         TextView name = (TextView) findViewById(R.id.TransactionName);
-        String nameText = "Name: " + getFieldFromJson(transactionJson, "name");
+        String nameText = "Name: " + transaction.getName();
         name.setText(nameText);
+
+        setupRecyclerView();
 
         // Append to total
         TextView total =(TextView)findViewById(R.id.TransactionTotal);
-        String totalText = "Total: " + getFieldFromJson(transactionJson, "total");
+        String totalText = "Total: " + transaction.getTotalPrice();
         total.setText(totalText);
 
         ButterKnife.bind(this);
@@ -53,7 +82,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
     @OnClick(R.id.send_reminder_btn)
     void onSendReminderClicked() {
         Log.d(TAG, "send reminder  button clicked");
-        RecipientListActivity.startActivity(getApplicationContext(), transactionId, transactionJson);
+        RecipientListActivity.startActivity(getApplicationContext(), transaction);
     }
 
     private String getFieldFromJson(String json, String fieldName) {

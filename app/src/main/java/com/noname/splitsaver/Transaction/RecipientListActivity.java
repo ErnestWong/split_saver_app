@@ -16,6 +16,7 @@ import com.noname.splitsaver.Login.PinActivity;
 import com.noname.splitsaver.MainActivity;
 import com.noname.splitsaver.MainApplication;
 import com.noname.splitsaver.Models.Payee;
+import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.Network.NetworkManager;
 import com.noname.splitsaver.R;
 
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,16 +39,11 @@ import retrofit2.Response;
 public class RecipientListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = "RecipientListActivity";
+    private static Transaction transaction;
     private static String transactionId = "";
-    private static JSONObject transactionJson;
 
-    public static void startActivity(Context context, String id, String json) {
-        transactionId = id;
-        try {
-            transactionJson = new JSONObject(json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public static void startActivity(Context context, Transaction t) {
+        transaction = t;
         Intent intent = new Intent(context, RecipientListActivity.class);
         context.startActivity(intent);
     }
@@ -56,7 +53,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_send_view);
 
-        ArrayList<String> payees = getPayeesFromJSON(transactionJson);
+        ArrayList<String> payees = convertToString(transaction.getPayees());
 
         ListAdapter payeeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, payees);
         ListView payeeListView = (ListView) findViewById(R.id.payeeList);
@@ -90,6 +87,14 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         NetworkManager.postPaymentRequest(postPaymentRequest, payee, transactionId);
         Toast.makeText(this,"Sending reminder to " + payee , Toast.LENGTH_LONG).show();
 
+    }
+
+    private ArrayList<String> convertToString(List<Payee> payees) {
+        ArrayList<String> strings = new ArrayList<>();
+        for (Payee p :  payees) {
+            strings.add(p.getName() + ", "+ p.getNumber() + ", $" + p.getTotal());
+        }
+        return strings;
     }
 
     private ArrayList<String> getPayeesFromJSON(JSONObject json) {

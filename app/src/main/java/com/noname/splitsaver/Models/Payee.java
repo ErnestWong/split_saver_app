@@ -33,4 +33,12 @@ public class Payee implements Serializable {
     public void addItem(Item item) {
         items.add(item);
     }
+
+    public float getTotal() {
+        float total = 0;
+        for (Item i : this.items) {
+            total += i.getAmount();
+        }
+        return total;
+    }
 }
