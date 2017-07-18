@@ -1,5 +1,6 @@
 package com.noname.splitsaver.Network;
 
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +28,11 @@ public class NetworkManager {
 
     public static void postLoginUser(Callback<ResponseBody> callback, String phoneNumber) {
         Call<ResponseBody> call = service.postLoginUser(phoneNumber);
+        call.enqueue(callback);
+    }
+
+    public static void getUserTransactions(Callback<ResponseBody> callback){
+        Call<ResponseBody> call = service.getUserTransactions();
         call.enqueue(callback);
     }
 }

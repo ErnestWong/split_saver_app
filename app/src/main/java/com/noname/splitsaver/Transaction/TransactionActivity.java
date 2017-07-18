@@ -10,6 +10,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.util.Log;
+
 
 import com.noname.splitsaver.R;
 
@@ -17,6 +19,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TransactionActivity extends AppCompatActivity {
+
+    private static final String TAG = "TransactionActivity";
+
+
 
     @BindView(R.id.transaction_recycler_view)
     RecyclerView recyclerView;
@@ -40,6 +46,7 @@ public class TransactionActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+        Log.d(TAG, "IN TRANSACTION ACTIVITY");
 
         setupRecyclerView();
     }

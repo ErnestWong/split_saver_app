@@ -15,46 +15,54 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 class TransactionAdapter extends RecyclerView.Adapter {
+    private static final String TAG = "TransactionAdapter";
+
 
     private List<Transaction> transactionList = new ArrayList<>();
 
     TransactionAdapter() {
         getData();
-        populateDummyData();
     }
 
     private void getData() {
-//        Callback<JsonObject> callback = new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                if (response.isSuccessful()) {
-//                    String jsonString = response.body().toString();
-//                    Log.d("DAVID", "onResponse: " + jsonString);
-//                } else {
-//                    Log.d("DAVID", "onResponse: " + response.errorBody());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> call, Throwable t) {
-//                t.printStackTrace();
-//            }
-//        };
-//        NetworkManager.getAllItems(callback);
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String json = response.body().toString();
+                    Log.d(TAG, "onResponse: " + json);
+                    parseJson(json);
+                } else {
+                    Log.d(TAG, "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        };
+        NetworkManager.getUserTransactions(callback);
     }
 
-    private void populateDummyData() {
-        for (int i = 0; i < 100; i++) {
-            Date createDate = new Date();
-            Date purchaseDate = new Date(i, i % 12, i % 30);
-            transactionList.add(new Transaction("Transaction " + i, i, createDate, purchaseDate));
-        }
+    private void parseJson(String json){
+        //Parse and add json transaction data to transactionList
     }
+
+//    private void populateDummyData() {
+//        getData();
+//        for (int i = 0; i < 100; i++) {
+//            Date createDate = new Date();
+//            Date purchaseDate = new Date(i, i % 12, i % 30);
+//            transactionList.add(new Transaction("Transaction " + i, i, createDate, purchaseDate));
+//        }
+//    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
