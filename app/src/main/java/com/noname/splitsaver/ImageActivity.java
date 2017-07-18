@@ -3,7 +3,10 @@ package com.noname.splitsaver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,27 +21,37 @@ import android.widget.Toast;
 
 import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.ocr.ImageProcess;
+import com.noname.splitsaver.ocr.OCRRegion;
 import com.noname.splitsaver.ocr.TessOCR;
+//import com.noname.splitsaver.ocr.Testing;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 
+
+
 public class ImageActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "extraImageUri";
     public static final String EXTRA_TOTAL_AMOUNT = "extraTotalAmount";
     public static RectangleView rectView;
     private TessOCR tessOCR;
-    private Bitmap imageBitmap;
+    private Bitmap receiptBitmap;
+    private Bitmap subBitmap;
     private ArrayList<Float> itemAmounts;
     private Float total;
+    private List<OCRRegion> ocrRegions;
+
+    private TouchMode mode;
 
     @BindView(R.id.image_view)
     ImageView imageView;
@@ -84,6 +97,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
         itemAmounts = new ArrayList<Float>();
+        mode = TouchMode.SELECT_RECT_MODE;
 
         final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.imagesurfaceview);
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
@@ -95,7 +109,7 @@ public class ImageActivity extends AppCompatActivity {
         if (intent.hasExtra(EXTRA_IMAGE_URI)) {
             Uri imageUri = Uri.parse(intent.getStringExtra(EXTRA_IMAGE_URI));
             try {
-                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                receiptBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             } catch (Exception e) {
                 Log.e("Error", "failed to copy bitmap image");
             }
@@ -105,6 +119,91 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnTouch(R.id.imagesurfaceview)
     boolean onTouch(View v, MotionEvent event) {
+        switch (mode) {
+            case SELECT_ITEM_MODE:
+                return handleSelectItemModeTouch(v, event);
+            case SELECT_RECT_MODE:
+                return handleSelectRectModeTouch(v, event);
+            case SELECT_TOTAL_MODE:
+                return handleSelectTotalModeTouch(v, event);
+            default:
+                return false;
+        }
+    }
+
+    private Point getScaledCoordinates(int eventX, int eventY) {
+        float[] eventXY = new float[] {eventX, eventY};
+
+        Matrix invertMatrix = new Matrix();
+        imageView.getImageMatrix().invert(invertMatrix);
+
+        invertMatrix.mapPoints(eventXY);
+        int x = Integer.valueOf((int)eventXY[0]);
+        int y = Integer.valueOf((int)eventXY[1]);
+
+        return new Point(x, y);
+
+    }
+
+    private String findSelectedRegionAmount(int x, int y) {
+        Point point = getScaledCoordinates(x, y);
+
+        for (OCRRegion region : ocrRegions) {
+            org.opencv.core.Rect r = region.getRect();
+            if (r.contains(point)) {
+                return region.getOCR();
+            }
+        }
+        return  null;
+    }
+
+    boolean handleSelectItemModeTouch(View v, MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                try {
+                    String itemAmount = findSelectedRegionAmount(x, y);
+                    if (itemAmount != null) {
+                        Log.d("ImageActivity", "ocr result: " + itemAmount);
+                        itemAmounts.add(Float.parseFloat(itemAmount));
+                        showToast("Successfully added item amount.");
+                    } else {
+                        showToast("No amount found.");
+                    }
+                } catch (Exception e) {
+                    showToast("Error occurred while adding item");
+                    Log.e("ImageActivity", "Error when adding item : " + e.getMessage());
+                }
+                break;
+        }
+        return true;
+    }
+
+    boolean handleSelectTotalModeTouch(View v, MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                try {
+                    String totalAmount = findSelectedRegionAmount(x, y);
+                    if (totalAmount != null) {
+                        Log.d("ImageActivity", "ocr result: " + totalAmount);
+                        this.total = Float.parseFloat(totalAmount);
+                        showToast("Successfully added total.");
+                    } else {
+                        showToast("No amount found.");
+                    }
+                } catch (Exception e) {
+                    showToast("Error occurred while adding total.");
+                    Log.e("ImageActivity", "Error when adding item : " + e.getMessage());
+                }
+                break;
+        }
+        return true;
+    }
+
+    boolean handleSelectRectModeTouch(View v, MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
         switch (event.getAction()) {
@@ -125,7 +224,8 @@ public class ImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_total_btn)
     void onAddTotalButtonClicked() {
-//        String stringTotal = "123.45";
+        mode = TouchMode.SELECT_TOTAL_MODE;
+        /*
         try {
             String stringTotal = getOCRResult();
             this.total = Float.parseFloat(stringTotal);
@@ -135,32 +235,49 @@ public class ImageActivity extends AppCompatActivity {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
             Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
         }
+        */
     }
 
     @OnClick(R.id.add_item_btn)
     void onAddItemButtonClicked() {
-//        String stringAmount = "12.00";
+        mode = TouchMode.SELECT_ITEM_MODE;
+        /*
         try {
             String stringAmount = getOCRResult();
             float amount = Float.parseFloat(stringAmount);
             itemAmounts.add(amount);
             Log.d("ImageActivity", String.format("OCR item amount: %f", amount));
-            Toast.makeText(getApplicationContext(), "Successfully added item amount.", Toast.LENGTH_SHORT).show();
+            showToast("Successfully added item amount.");
         } catch (NumberFormatException e) {
             Log.e("ImageActivity", "onSplitButtonClicked: ", e);
-            Toast.makeText(getApplicationContext(), "Error while processing OCR. Please try again.", Toast.LENGTH_SHORT).show();
+            showToast("Error while processing OCR. Please try again.");
         }
+        */
     }
 
     @OnClick(R.id.split_btn)
-    void onSplitButtonClicked() {
-        setBitmap();
-//        if (this.total == null) {
-//            Toast.makeText(this, "Please select a total first", Toast.LENGTH_SHORT).show();
-//        } else {
-//            SplitActivity.startActivity(getApplicationContext(), this.total, itemAmounts);
-//        }
+    // TEMP to allow select rectangle
+    void onSplitButtonClicked()  {
+        if (rectView.drawn()) {
+            subBitmap = cropBitmap(receiptBitmap, rectView.getScaledRect(receiptBitmap));
+            ImageProcess imgProcess = new ImageProcess(subBitmap, tessOCR);
+            subBitmap = imgProcess.getBitmap();
+            ocrRegions = imgProcess.getOcrRegions();
+            setImageView(subBitmap);
+        } else {
+            showToast("Please draw a rectangle  first.");
+        }
     }
+
+    /*
+    void onSplitButtonClicked() {
+        if (this.total == null) {
+            Toast.makeText(this, "Please select a total first", Toast.LENGTH_SHORT).show();
+        } else {
+            SplitActivity.startActivity(getApplicationContext(), this.total, itemAmounts);
+        }
+    }
+    */
 
 
     /**
@@ -180,13 +297,11 @@ public class ImageActivity extends AppCompatActivity {
         imageView.setImageURI(imageUri);
     }
 
-    private void setBitmap() {
-        Rect ocrRect = rectView.getScaledRect(imageBitmap);
-        Bitmap bitmap = cropBitmap(imageBitmap, ocrRect);
-        Bitmap processed = ImageProcess.process(bitmap);
-        imageView.setImageBitmap(processed);
+    public void setImageView(Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
     }
 
+    /*
     private String getOCRResult() {
         Rect ocrRect = rectView.getScaledRect(imageBitmap);
         Bitmap bitmap = cropBitmap(imageBitmap, ocrRect);
@@ -198,13 +313,9 @@ public class ImageActivity extends AppCompatActivity {
         Log.d("imageActivity", "OCR image result: " + result);
         return cleanup(result);
     }
+    */
 
-    /**
-     * Removes spaces or dollar signs from the OCR string.
-     * @param result
-     * @return
-     */
-    private String cleanup(String result) {
-        return result.replaceAll("\\s+","").replaceAll("\\$", "");
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

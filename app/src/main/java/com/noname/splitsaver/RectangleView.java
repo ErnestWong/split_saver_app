@@ -9,6 +9,9 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Custom view to draw rectangle on preview screen
  * 
@@ -21,10 +24,13 @@ public class RectangleView extends View {
 	private int left = 0;
 	private int right = 0;
 	String s;
+    private Canvas mCanvas;
+    List<Rect> rects = new ArrayList<Rect>();
 
 	public RectangleView(Context context) {
 		super(context);
 		mPaint = new Paint();
+		mCanvas = new Canvas();
 
 	}
 
@@ -36,9 +42,18 @@ public class RectangleView extends View {
 		mPaint.setStrokeWidth(2);
 		canvas.drawRect(left, top, right, bottom, mPaint);
 
+        for (Rect r : rects) {
+            canvas.drawRect(r.left, r.top, r.right, r.bottom, mPaint);
+        }
+
 		s = String.format("t: %d, b: %d, l: %d, r: %d", top, bottom, left, right);
         Log.d("RectangleView", "Ondraw: " + s);
 
+	}
+
+
+	public boolean drawn() {
+		return !(right == 0 && left == 0 && top == 0 && bottom == 0);
 	}
 
     public void setTopLeft(int x, int y) {
@@ -56,6 +71,13 @@ public class RectangleView extends View {
 	public Rect getRect() {
         return new Rect(left, top, right, bottom);
 
+	}
+
+	public void drawRect(float left, float top, float right, float bottom) {
+        mPaint.setColor(Color.RED);
+		mPaint.setStrokeWidth(7);
+        rects.add(new  Rect((int)left, (int)top, (int)right, (int)bottom));
+		invalidate();
 	}
 
 	/**

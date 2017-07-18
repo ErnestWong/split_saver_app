@@ -66,7 +66,7 @@ public class TessOCR {
         bmp = cleanupImage(bmp);
 		tessAPI.setImage(bmp);
 		String result = tessAPI.getUTF8Text();
-		return result;
+		return cleanup(result);
 	}
 
 	public String doOCR(byte[][] byteArray) {
@@ -97,4 +97,13 @@ public class TessOCR {
 	private Bitmap cleanupImage(Bitmap bmp) {
 		return bmp;
 	}
+
+    /**
+     * Removes spaces or dollar signs from the OCR string.
+     * @param result
+     * @return
+     */
+    private String cleanup(String result) {
+        return result.replaceAll("\\s+","").replaceAll("\\$", "");
+    }
 }

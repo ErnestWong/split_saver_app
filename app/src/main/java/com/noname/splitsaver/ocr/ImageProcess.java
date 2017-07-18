@@ -1,5 +1,6 @@
 package com.noname.splitsaver.ocr;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -20,16 +21,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 
 public class ImageProcess {
     private Bitmap bitmap;
+    private List<OCRRegion> ocrRegions;
+    private TessOCR tessOCR;
 
-    public ImageProcess(Bitmap bitmap) {
-//        System.loadLibrary("opencv_java");
-        this.bitmap = bitmap;
+    public ImageProcess(Bitmap bitmap, TessOCR tessOCR) {
+        this.tessOCR = tessOCR;
+        process(bitmap);
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public List<OCRRegion> getOcrRegions() {
+        return ocrRegions;
     }
     	/**
 	 * converts bitmap to single channel 8 bit Mat
@@ -38,7 +51,7 @@ public class ImageProcess {
 	 *            bitmap to convert
 	 * @return Mat of same size as bmp; 8 channel single bit
 	 */
-	public static Mat bitmapToMat(Bitmap bmp) {
+	private static Mat bitmapToMat(Bitmap bmp) {
 		Mat mat = new Mat();
 		Utils.bitmapToMat(bmp, mat);
 
@@ -52,7 +65,7 @@ public class ImageProcess {
 	 *            mat to convert
 	 * @return bitmap of same size as mat, in ARGB8888 format
 	 */
-	public static Bitmap matToBitmap(Mat mat) {
+	private static Bitmap matToBitmap(Mat mat) {
 		Bitmap bmp = Bitmap.createBitmap(mat.cols(), mat.rows(),
 				Bitmap.Config.ARGB_8888);
 		Utils.matToBitmap(mat, bmp);
@@ -60,47 +73,31 @@ public class ImageProcess {
 		return bmp;
 	}
 
-    public static Bitmap process(Bitmap bitmap){
+    private void process(Bitmap bitmap){
+        // Modified version of code found here:
+        // https://stackoverflow.com/questions/34341297/using-opencv-to-find-the-bounding-box-of-numbers-on-an-image
         System.loadLibrary("opencv_java");
 
         Mat main = bitmapToMat(bitmap);
         Mat rgb = new Mat();
-
         Imgproc.pyrDown(main, rgb);
-
         Mat small = new Mat();
-
         Imgproc.cvtColor(rgb, small, Imgproc.COLOR_RGB2GRAY);
-
         Mat grad = new Mat();
-
         Mat morphKernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(3,3));
-
         Imgproc.morphologyEx(small, grad, Imgproc.MORPH_GRADIENT , morphKernel);
-
         Mat bw = new Mat();
-
         Imgproc.threshold(grad, bw, 0.0, 255.0, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
-
         Mat connected = new Mat();
-
         morphKernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9,1));
-
         Imgproc.morphologyEx(bw, connected, Imgproc.MORPH_CLOSE  , morphKernel);
-
-
         Mat mask = Mat.zeros(bw.size(), CvType.CV_8UC1);
-
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-
         Mat hierarchy = new Mat();
-
         Imgproc.findContours(connected, contours, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE, new Point(0, 0));
-
         List<Rect> boundingRects = new ArrayList<Rect>();
 
-        for(int idx = 0; idx < contours.size(); idx++)
-        {
+        for(int idx = 0; idx < contours.size(); idx++) {
             Rect rect = Imgproc.boundingRect(contours.get(idx));
 
             Mat maskROI = new Mat(mask, rect);
@@ -110,24 +107,46 @@ public class ImageProcess {
 
             double r = (double)Core.countNonZero(maskROI)/(rect.width*rect.height);
 
-            if (r > .45 && (rect.height > 8 && rect.width > 8))
-            {
-//                Imgproc.rectangle(rgb, rect.br() , new Point( rect.br().x-rect.width ,rect.br().y-rect.height),  new Scalar(0, 255, 0));
+            if (r > .45 && (rect.height > 8 && rect.width > 8)) {
                 double x = rect.br().x- rect.width;
                 double y = rect.br().y- rect.height;
                 boundingRects.add(new Rect(rect.br(), new Point( rect.br().x-rect.width ,rect.br().y-rect.height)));
             }
-
-
-
         }
 
         List<Rect> mergedRects = mergeRects(boundingRects);
-            for (Rect r1 : mergedRects) {
-                Imgproc.rectangle(rgb, r1.br() , new Point( r1.br().x-r1.width ,r1.br().y-r1.height),  new Scalar(0, 255, 0));
-            }
-        return matToBitmap(rgb);
+
+        for (Rect r1 : mergedRects) {
+            Imgproc.rectangle(rgb, r1.br() , new Point( r1.br().x-r1.width ,r1.br().y-r1.height),  new Scalar(0, 255, 0));
+        }
+
+        dilateMat(bw, 2);
+
+
+        List<OCRRegion> ocrRegions = new ArrayList<OCRRegion>();
+        for (Rect r2 : mergedRects) {
+            Mat roi = new Mat(rgb, r2);
+            Bitmap b = matToBitmap(roi);
+            ocrRegions.add(new OCRRegion(r2, b, roi, tessOCR));
+        }
+        this.bitmap = matToBitmap(rgb);
+        this.ocrRegions = ocrRegions;
+//        return matToBitmap(rgb);
     }
+
+    public static void dilateMat(Mat mat, int factor) {
+		Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS,
+				new Size(factor, factor));
+		Imgproc.dilate(mat, mat, kernel);
+	}
+
+    public static void erodeMat(Mat mat, int factor) {
+		// Mat manip = bitmapToMat(fixedBmp);
+		Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS,
+				new Size(factor, factor));
+		Imgproc.erode(mat, mat, kernel);
+		// fixedBmp = matToBitmap(manip);
+	}
 
     private static List<Rect> mergeRects(List<Rect> input) {
         List<Rect> mergedOverlapMatPoints = mergeOverlappingRects(input);
@@ -184,7 +203,7 @@ public class ImageProcess {
     private static List<Rect> findRectsInRect(List<Rect> rects, Rect rect) {
         List<Rect> output = new ArrayList<Rect>();
         for (Rect r : rects) {
-            if (rect == r) continue;
+            if (rect.equals(r)) continue;
             if (rect.contains(r.br()) || rect.contains(r.tl())) {
                 output.add(r);
             }
@@ -309,7 +328,5 @@ public class ImageProcess {
 		return result;
 	}
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
+
 }
