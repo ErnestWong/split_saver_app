@@ -15,31 +15,52 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/image_view" />
 
-    <Button
-        android:id="@+id/split_btn"
+
+
+        <Button
+        android:id="@+id/cancel_btn"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="46dp"
-        android:text="SPLIT BILL"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+            android:text="CANCEL"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true">
 
         <Button
         android:id="@+id/add_item_btn"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
         android:text="ADD ITEM"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentEnd="true" />
 
         <Button
         android:id="@+id/add_total_btn"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="150dp"
         android:text="ADD TOTAL"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentEnd="true" />
+
+        <Button
+        android:id="@+id/select_rect_btn"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:layout_alignParentEnd="true" />
+    </LinearLayout>
+
+        <Button
+        android:id="@+id/save_receipt_btn"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="77dp"
+        android:text="SAVE"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
