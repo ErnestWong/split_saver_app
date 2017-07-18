@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,15 +17,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.noname.splitsaver.Item.AssignmentListener;
-import com.noname.splitsaver.Item.PayeeAdapter;
-import com.noname.splitsaver.Item.PayeeAutoCompleteAdapter;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Payee;
 import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.Network.NetworkManager;
+import com.noname.splitsaver.Payee.PayeeAutoCompleteAdapter;
+import com.noname.splitsaver.Payee.PayeeRecyclerViewAdapter;
+import com.noname.splitsaver.Utils.AssignmentListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,8 +44,8 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
     public static final String EXTRA_TRANSACTION = "extraTransaction";
     private static final String TAG = "AssignmentActivity";
 
-    @BindView(R.id.add_payee_editText)
-    AutoCompleteTextView addPayeeEditText;
+    @BindView(R.id.add_payee_auto)
+    AutoCompleteTextView addPayeeAuto;
 
     @BindView(R.id.total_textView)
     TextView totalTextView;
@@ -71,9 +74,9 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
     private Transaction transaction;
     private List<Payee> payees;
     private List<Item> items;
-    private PayeeAdapter payeeAdapter;
+    private PayeeRecyclerViewAdapter payeeRecyclerViewAdapter;
     private Payee selectedPayee;
-
+    private float assignedAmount;
 
     public static void startActivity(Context context, Transaction transaction) {
         Intent intent = new Intent(context, AssignmentActivity.class);
@@ -84,26 +87,19 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
         context.startActivity(intent);
     }
 
-    @OnClick(R.id.add_payee_btn)
-    void onAddButtonClicked() {
-        if (selectedPayee != null) {
-            if (payees.contains(selectedPayee)) {
-                Toast.makeText(getApplicationContext(), "The selected payee is already added", Toast.LENGTH_SHORT).show();
-            } else {
-                payees.add(selectedPayee);
-                payeeAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
     @OnClick(R.id.split_even_btn)
     void onSplitEvenClicked() {
         int numPayee = payees.size();
-        float splitPrice = transaction.getTotalPrice() / numPayee;
-        for(Payee payee : payees){
-            payee.addItem(new Item(Item.SPLIT_EVENLY, splitPrice));
+        Log.d(TAG, "onSplitEvenClicked: " + assignedAmount);
+        float splitPrice = (transaction.getTotalPrice() - assignedAmount) / numPayee;
+        if (splitPrice > 0) {
+            for (Payee payee : payees) {
+                payee.addItem(new Item(Item.SPLIT_EVENLY, splitPrice));
+            }
+            updateTotal();
+        } else {
+            Toast.makeText(getApplicationContext(), "Assigned total is full", Toast.LENGTH_SHORT).show();
         }
-        payeeAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.send_transaction_btn)
@@ -124,7 +120,7 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
         if (bundle != null && bundle.get(EXTRA_TRANSACTION) != null) {
             transaction = (Transaction) bundle.getSerializable(EXTRA_TRANSACTION);
             if (transaction != null) {
-                items = transaction.getItems();
+                items = new ArrayList<>(transaction.getItems());
             } else {
                 Log.d("AssignmentActivity", "onCreate: no items found");
                 finish();
@@ -138,12 +134,27 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
     private void setupViews() {
         totalTextView.setText(getString(R.string.transaction_total, 0f, transaction.getTotalPrice()));
         PayeeAutoCompleteAdapter adapter = new PayeeAutoCompleteAdapter(this, getContactList());
-        addPayeeEditText.setThreshold(1);
-        addPayeeEditText.setAdapter(adapter);
-        addPayeeEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        addPayeeAuto.setThreshold(1);
+        addPayeeAuto.setAdapter(adapter);
+        addPayeeAuto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedPayee = (Payee) adapterView.getItemAtPosition(i);
+                Payee payee = (Payee) adapterView.getItemAtPosition(i);
+                if (payees.contains(payee)) {
+                    Toast.makeText(getApplicationContext(), "The selected payee is already added", Toast.LENGTH_SHORT).show();
+                } else {
+                    payees.add(payee);
+                    addPayeeAuto.setText("");
+                    payeeRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        addPayeeAuto.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    addPayeeAuto.showDropDown();
+                }
             }
         });
         setupRecyclerView();
@@ -152,8 +163,8 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         payeeItemRecyclerView.setLayoutManager(layoutManager);
-        payeeAdapter = new PayeeAdapter(payees, items, this);
-        payeeItemRecyclerView.setAdapter(payeeAdapter);
+        payeeRecyclerViewAdapter = new PayeeRecyclerViewAdapter(payees, items, this);
+        payeeItemRecyclerView.setAdapter(payeeRecyclerViewAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(payeeItemRecyclerView.getContext(),
                 layoutManager.getOrientation());
         payeeItemRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -166,22 +177,37 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                contactList.add(new Payee(name, phoneNumber));
+                String normalized = PhoneNumberUtils.normalizeNumber(phoneNumber);
+                if (normalized.startsWith("+")) {
+                    normalized = normalized.replaceFirst("\\+", "");
+                }
+                if (normalized.startsWith("1")) {
+                    normalized = normalized.replaceFirst("1", "");
+                }
+
+                contactList.add(new Payee(name, normalized));
             }
             cursor.close();
         }
+        Collections.sort(contactList, new Comparator<Payee>() {
+            @Override
+            public int compare(Payee a, Payee b) {
+                return a.getName().compareTo(b.getName());
+            }
+        });
         return contactList;
     }
 
     @Override
     public void updateTotal() {
-        Log.d(TAG, "updateTotal: ");
-        float total = 0;
+        Log.d(TAG, "updateTotal: " + assignedAmount);
+        payeeRecyclerViewAdapter.notifyDataSetChanged();
+        assignedAmount = 0;
         for (Payee payee : payees) {
             for (Item item : payee.getItems()) {
-                total += item.getAmount();
+                assignedAmount += item.getAmount();
             }
         }
-        totalTextView.setText(getString(R.string.transaction_total, total, transaction.getTotalPrice()));
+        totalTextView.setText(getString(R.string.transaction_total, assignedAmount, transaction.getTotalPrice()));
     }
 }

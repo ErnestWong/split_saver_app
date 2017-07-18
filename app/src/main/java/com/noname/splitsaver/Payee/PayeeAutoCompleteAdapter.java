@@ -1,4 +1,4 @@
-package com.noname.splitsaver.Item;
+package com.noname.splitsaver.Payee;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -19,7 +19,6 @@ import java.util.List;
 
 public class PayeeAutoCompleteAdapter extends ArrayAdapter<Payee> {
 
-    private Context context;
     private List<Payee> payees;
     private List<Payee> suggestions;
     private Filter payeeFilter = new Filter() {
@@ -66,7 +65,6 @@ public class PayeeAutoCompleteAdapter extends ArrayAdapter<Payee> {
 
     public PayeeAutoCompleteAdapter(@NonNull Context context, @NonNull List<Payee> payees) {
         super(context, android.R.layout.simple_list_item_1, payees);
-        this.context = context;
         this.payees = new ArrayList<>(payees);
         this.suggestions = new ArrayList<>(payees);
     }
@@ -75,7 +73,7 @@ public class PayeeAutoCompleteAdapter extends ArrayAdapter<Payee> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.payee_autocomplete_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_autocomplete_payee, parent, false);
         }
         setupViews(convertView, position);
         return convertView;

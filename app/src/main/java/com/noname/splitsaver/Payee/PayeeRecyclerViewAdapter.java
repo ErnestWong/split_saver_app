@@ -1,23 +1,25 @@
-package com.noname.splitsaver.Item;
+package com.noname.splitsaver.Payee;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.noname.splitsaver.Utils.AssignmentListener;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Payee;
 import com.noname.splitsaver.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PayeeAdapter extends RecyclerView.Adapter {
+public class PayeeRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<Payee> payeeList;
     private List<Item> itemList;
     private AssignmentListener listener;
 
-    public PayeeAdapter(List<Payee> payeeList, List<Item> itemList, AssignmentListener listener) {
+    public PayeeRecyclerViewAdapter(List<Payee> payeeList, List<Item> itemList, AssignmentListener listener) {
         this.payeeList = payeeList;
         this.itemList = itemList;
         this.listener = listener;
@@ -25,7 +27,7 @@ public class PayeeAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.payee_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_payee, parent, false);
         return new PayeeViewHolder(parent.getContext(), view, itemList, listener);
     }
 

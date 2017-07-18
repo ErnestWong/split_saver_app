@@ -1,4 +1,4 @@
-package com.noname.splitsaver.Item;
+package com.noname.splitsaver.Utils;
 
 public interface AssignmentListener {
     public void updateTotal();

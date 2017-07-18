@@ -1,23 +1,15 @@
 package com.noname.splitsaver.Transaction;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.JsonObject;
 import com.noname.splitsaver.Models.Transaction;
-import com.noname.splitsaver.Network.NetworkManager;
 import com.noname.splitsaver.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 class TransactionAdapter extends RecyclerView.Adapter {
 
@@ -56,7 +48,7 @@ class TransactionAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transaction, parent, false);
         return new TransactionViewHolder(view);
     }
 

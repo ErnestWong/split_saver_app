@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.noname.splitsaver.Item.ItemAdapter;
+import com.noname.splitsaver.Item.ItemRecyclerViewAdapter;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.Utils.Utils;
@@ -41,11 +41,11 @@ public class SplitActivity extends Activity {
     @BindView(R.id.receipt_name_viewSwitcher)
     ViewSwitcher receiptNameViewSwitcher;
 
-    @BindView(R.id.receipt_name_textView)
-    TextView receiptNameTextView;
-
     @BindView(R.id.receipt_name_editText)
     EditText receiptNameEditText;
+
+    @BindView(R.id.receipt_name_textView)
+    TextView receiptNameTextView;
 
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
@@ -59,7 +59,7 @@ public class SplitActivity extends Activity {
     @BindView(R.id.next_btn)
     Button nextButton;
 
-    ItemAdapter itemAdapter;
+    ItemRecyclerViewAdapter itemRecyclerViewAdapter;
     private float total = 0;
     private List<Item> lineItems = new ArrayList<>();
 
@@ -105,16 +105,13 @@ public class SplitActivity extends Activity {
 
         populateFields();
         setupRecyclerView();
-
-        receiptNameEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        receiptNameEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
     }
 
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        itemAdapter = new ItemAdapter(getApplicationContext(), lineItems);
-        recyclerView.setAdapter(itemAdapter);
+        itemRecyclerViewAdapter = new ItemRecyclerViewAdapter(getApplicationContext(), lineItems);
+        recyclerView.setAdapter(itemRecyclerViewAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -148,7 +145,7 @@ public class SplitActivity extends Activity {
     @OnClick(R.id.add_item_btn)
     void onAddItemClicked() {
         lineItems.add(new Item());
-        itemAdapter.notifyDataSetChanged();
+        itemRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.next_btn)
@@ -172,11 +169,11 @@ public class SplitActivity extends Activity {
             return null;
         }
 
-        return new Transaction(transactionName, total, itemAdapter.getItemList());
+        return new Transaction(transactionName, total, itemRecyclerViewAdapter.getItemList());
     }
 
     private boolean itemListNameEmpty() {
-        for (Item i : itemAdapter.getItemList()) {
+        for (Item i : itemRecyclerViewAdapter.getItemList()) {
             if (i.getName() == null || i.getName().equals("")) {
                 return true;
             }

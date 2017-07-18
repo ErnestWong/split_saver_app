@@ -9,6 +9,7 @@ public class Item implements Serializable {
     public static final int TYPE_ITEM_NAME = 1;
     public static final int TYPE_ITEM_EMPTY = 2;
     public static final String SPLIT_EVENLY = "Split Evenly";
+    public static final String CUSTOM_ITEM = "Custom Item";
 
     @SerializedName("name")
     private String name;

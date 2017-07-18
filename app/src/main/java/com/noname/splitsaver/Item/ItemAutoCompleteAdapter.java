@@ -64,8 +64,8 @@ public class ItemAutoCompleteAdapter extends ArrayAdapter<Item> {
         }
     };
 
-    ItemAutoCompleteAdapter(@NonNull Context context, @NonNull List<Item> items) {
-        super(context, android.R.layout.simple_list_item_1, items);
+    public ItemAutoCompleteAdapter(@NonNull Context context, @NonNull List<Item> items) {
+        super(context, android.R.layout.simple_list_item_1, new ArrayList<>(items));
         this.items = new ArrayList<>(items);
         this.suggestions = new ArrayList<>(items);
     }
@@ -74,7 +74,7 @@ public class ItemAutoCompleteAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_autocomplete_view, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_autocomplete_item, parent, false);
         }
         setupViews(convertView, position);
         return convertView;

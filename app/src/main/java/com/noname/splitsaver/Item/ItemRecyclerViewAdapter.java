@@ -14,12 +14,12 @@ import java.util.List;
 import static com.noname.splitsaver.Models.Item.TYPE_ITEM_EMPTY;
 import static com.noname.splitsaver.Models.Item.TYPE_ITEM_NAME;
 
-public class ItemAdapter extends RecyclerView.Adapter {
+public class ItemRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<Item> itemAmountList;
 
-    public ItemAdapter(Context context, List<Item> itemAmountList) {
+    public ItemRecyclerViewAdapter(Context context, List<Item> itemAmountList) {
         this.context = context;
         this.itemAmountList = itemAmountList;
     }
@@ -36,15 +36,15 @@ public class ItemAdapter extends RecyclerView.Adapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case TYPE_ITEM_NAME:
-                view = inflater.inflate(R.layout.item_view, parent, false);
+                view = inflater.inflate(R.layout.view_item, parent, false);
                 viewHolder = new ItemNameViewHolder(view, context);
                 break;
             case TYPE_ITEM_EMPTY:
-                view = inflater.inflate(R.layout.item_edit_view, parent, false);
+                view = inflater.inflate(R.layout.view_item_edit, parent, false);
                 viewHolder = new ItemEmptyViewHolder(view, context);
                 break;
             default:
-                view = inflater.inflate(R.layout.item_edit_view, parent, false);
+                view = inflater.inflate(R.layout.view_item_edit, parent, false);
                 viewHolder = new ItemEmptyViewHolder(view, context);
                 break;
         }
