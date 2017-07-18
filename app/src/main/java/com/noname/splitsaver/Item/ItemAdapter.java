@@ -1,36 +1,69 @@
 package com.noname.splitsaver.Item;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.noname.splitsaver.Models.Item;
-import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.R;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static com.noname.splitsaver.Models.Item.TYPE_ITEM_EMPTY;
+import static com.noname.splitsaver.Models.Item.TYPE_ITEM_NAME;
 
 public class ItemAdapter extends RecyclerView.Adapter {
 
+    private Context context;
     private List<Item> itemAmountList;
 
-    public ItemAdapter(List<Item>itemAmountList) {
+    public ItemAdapter(Context context, List<Item> itemAmountList) {
+        this.context = context;
         this.itemAmountList = itemAmountList;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return itemAmountList.get(position).getType();
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false);
-        return new ItemViewHolder(view);
+        RecyclerView.ViewHolder viewHolder;
+        View view;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        switch (viewType) {
+            case TYPE_ITEM_NAME:
+                view = inflater.inflate(R.layout.item_view, parent, false);
+                viewHolder = new ItemNameViewHolder(view, context);
+                break;
+            case TYPE_ITEM_EMPTY:
+                view = inflater.inflate(R.layout.item_edit_view, parent, false);
+                viewHolder = new ItemEmptyViewHolder(view, context);
+                break;
+            default:
+                view = inflater.inflate(R.layout.item_edit_view, parent, false);
+                viewHolder = new ItemEmptyViewHolder(view, context);
+                break;
+        }
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ItemViewHolder) holder).bindView(itemAmountList.get(position));
+        switch (holder.getItemViewType()) {
+            case TYPE_ITEM_NAME:
+                ((ItemNameViewHolder) holder).bindView(itemAmountList.get(position));
+                break;
+            case TYPE_ITEM_EMPTY:
+                ((ItemEmptyViewHolder) holder).bindView(itemAmountList.get(position));
+                break;
+            default:
+                ((ItemViewHolder) holder).bindView(itemAmountList.get(position));
+                break;
+        }
     }
 
     @Override
@@ -41,5 +74,4 @@ public class ItemAdapter extends RecyclerView.Adapter {
     public List<Item> getItemList() {
         return itemAmountList;
     }
-
 }

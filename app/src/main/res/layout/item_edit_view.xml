@@ -27,14 +27,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Amount: "
+            android:text="Amount: $"
             android:textSize="@dimen/add_item_textSize" />
 
-        <TextView
-            android:id="@+id/amount_textView"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/amount_editText"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:hint="0.00"
+            android:inputType="numberDecimal"
             android:textSize="@dimen/add_item_textSize" />
 
     </LinearLayout>

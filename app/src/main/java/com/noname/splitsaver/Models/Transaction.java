@@ -1,31 +1,34 @@
 package com.noname.splitsaver.Models;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Transaction {
+public class Transaction implements Serializable {
 
+    @SerializedName("name")
     private String name;
-    private double totalPrice;
+    @SerializedName("total")
+    private float totalPrice;
+    @SerializedName("createdAt")
     private Date createDate;
-    private Date purchaseDate;
+    @SerializedName("associatedUsers")
+    private List<Payee> payees;
+    @SerializedName("lineItems")
     private List<Item> items;
 
-
-    public Transaction(String name, double totalPrice, Date createDate, Date purchaseDate) {
+    public Transaction(String name, float totalPrice) {
         this.name = name;
         this.totalPrice = totalPrice;
-        this.createDate = createDate;
-        this.purchaseDate = purchaseDate;
-        items = new ArrayList<Item>();
+        items = new ArrayList<>();
     }
 
-    public Transaction(String name, double totalPrice, Date createDate, Date purchaseDate, List<Item> items) {
+    public Transaction(String name, float totalPrice, List<Item> items) {
         this.name = name;
         this.totalPrice = totalPrice;
-        this.createDate = createDate;
-        this.purchaseDate = purchaseDate;
         this.items = items;
     }
 
@@ -38,7 +41,7 @@ public class Transaction {
         return name;
     }
 
-    public double getTotalPrice() {
+    public float getTotalPrice() {
         return totalPrice;
     }
 
@@ -46,7 +49,15 @@ public class Transaction {
         return createDate;
     }
 
-    public Date getPurchaseDate() {
-        return purchaseDate;
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public List<Payee> getPayees() {
+        return payees;
+    }
+
+    public void setPayees(List<Payee> payees) {
+        this.payees = payees;
     }
 }

@@ -50,9 +50,7 @@ class TransactionAdapter extends RecyclerView.Adapter {
 
     private void populateDummyData() {
         for (int i = 0; i < 100; i++) {
-            Date createDate = new Date();
-            Date purchaseDate = new Date(i, i % 12, i % 30);
-            transactionList.add(new Transaction("Transaction " + i, i, createDate, purchaseDate));
+            transactionList.add(new Transaction("Transaction " + i, i));
         }
     }
 
