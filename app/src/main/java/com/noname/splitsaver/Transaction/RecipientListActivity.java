@@ -1,5 +1,6 @@
 package com.noname.splitsaver.Transaction;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -35,30 +37,33 @@ import retrofit2.Response;
 public class RecipientListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = "RecipientListActivity";
-    String transactionId = "";
+    private static String transactionId = "";
+    private static JSONObject transactionJson;
+
+    public static void startActivity(Context context, String id, String json) {
+        transactionId = id;
+        try {
+            transactionJson = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(context, RecipientListActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_send_view);
 
-        Intent i = getIntent();
-        transactionId = i.getStringExtra("transactionId");
+        ArrayList<Payee> payees = getPayeesFromJSON(transactionJson);
 
-        try {
-            JSONObject obj = new JSONObject(i.getStringExtra("json"));
-            ArrayList<Payee> payees = getPayeesFromJSON(obj);
+        ListAdapter payeeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, payees);
+        ListView payeeListView = (ListView) findViewById(R.id.payeeList);
 
-            ListAdapter payeeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, payees);
-            ListView payeeListView = (ListView) findViewById(R.id.payeeList);
+        payeeListView.setAdapter(payeeAdapter);
 
-            payeeListView.setAdapter(payeeAdapter);
-
-            payeeListView.setOnItemClickListener(this);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        payeeListView.setOnItemClickListener(this);
     }
 
     Callback<ResponseBody> postPaymentRequest = new Callback<ResponseBody>() {
@@ -82,13 +87,25 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         Payee payee = (Payee) parent.getItemAtPosition(position);
         // Send to server
         NetworkManager.postPaymentRequest(postPaymentRequest, payee.getNumber(), transactionId);
-        Toast.makeText(this,"Sending reminder to "+ payee.getName() + " at " + payee.getNumber() , Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Sending reminder to " + payee.getNumber() , Toast.LENGTH_LONG).show();
 
     }
 
     private ArrayList<Payee> getPayeesFromJSON(JSONObject json) {
         ArrayList<Payee> payees = new ArrayList<>();
-        // TODO parse json object here
+        try {
+            JSONObject users = json.getJSONObject("associatedUsers");
+            Iterator<?> keys = users.keys();
+
+            while(keys.hasNext()) {
+                String key = (String)keys.next();
+                if (users.get(key) instanceof JSONObject) {
+                    payees.add(new Payee("", key)); // name not received in the server response
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return payees;
     }
 }

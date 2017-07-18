@@ -14,6 +14,9 @@ import com.noname.splitsaver.Login.SignupActivity;
 import com.noname.splitsaver.MainApplication;
 import com.noname.splitsaver.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -24,10 +27,12 @@ import butterknife.OnClick;
 public class TransactionDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "TransDetailsActivity";
-    String transactionId;
-    String json;
+    private static String transactionId;
+    private static String transactionJson;
 
-    public static void startActivity(Context context, String transactionId, String json) {
+    public static void startActivity(Context context, String id, String json) {
+        transactionId = id;
+        transactionJson = json;
         Intent intent = new Intent(context, TransactionDetailsActivity.class);
         context.startActivity(intent);
     }
@@ -38,18 +43,24 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.transaction_details_view);
 
         TextView total =(TextView)findViewById(R.id.TransactionTotal);
-        total.append(getTotalFromJson(json));
+        total.append(getTotalFromJson(transactionJson));
         ButterKnife.bind(this);
     }
 
     @OnClick(R.id.send_reminder_btn)
     void onSendReminderClicked() {
         Log.d(TAG, "send reminder  button clicked");
-        // TODO RecipientListActivity.startActivity(getApplicationContext(), transactionId, json);
+        RecipientListActivity.startActivity(getApplicationContext(), transactionId, transactionJson);
     }
 
-    // TODO parse json
     private String getTotalFromJson(String json) {
-        return json;
+        String total = "";
+        try {
+            JSONObject transactionObj = new JSONObject(json);
+            total = transactionObj.getString("total");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return total;
     }
 }
