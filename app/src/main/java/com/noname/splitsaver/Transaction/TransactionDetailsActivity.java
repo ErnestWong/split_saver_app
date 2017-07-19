@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.noname.splitsaver.Item.DetailsItemRecyclerViewAdapter;
 import com.noname.splitsaver.Item.ItemRecyclerViewAdapter;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Transaction;
@@ -40,7 +41,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
 
     private List<Item> lineItems = new ArrayList<>();
 
-    ItemRecyclerViewAdapter itemRecyclerViewAdapter;
+    DetailsItemRecyclerViewAdapter adapter;
 
     public static void startActivity(Context c, Transaction t) {
         transaction = t;
@@ -54,8 +55,8 @@ public class TransactionDetailsActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        itemRecyclerViewAdapter = new ItemRecyclerViewAdapter(getApplicationContext(), lineItems);
-        recyclerView.setAdapter(itemRecyclerViewAdapter);
+        adapter = new DetailsItemRecyclerViewAdapter(getApplicationContext(), lineItems);
+        recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
