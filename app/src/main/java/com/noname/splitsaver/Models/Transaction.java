@@ -10,6 +10,9 @@ import java.util.List;
 
 public class Transaction implements Serializable {
 
+
+    @SerializedName("_id")
+    private String id;
     @SerializedName("name")
     private String name;
     @SerializedName("total")
@@ -20,6 +23,7 @@ public class Transaction implements Serializable {
     private HashMap<String, Payee> payees;
     @SerializedName("lineItems")
     private List<Item> items;
+
 
     public Transaction(String name, float totalPrice) {
         this.name = name;
@@ -60,5 +64,9 @@ public class Transaction implements Serializable {
 
     public void setPayees(HashMap<String, Payee> payees) {
         this.payees = payees;
+    }
+
+    public String getId() {
+        return id;
     }
 }

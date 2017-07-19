@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.Network.NetworkManager;
 import com.noname.splitsaver.R;
@@ -13,28 +14,47 @@ import com.noname.splitsaver.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.Date;
+import android.widget.TextView;
+import android.view.View.OnClickListener;
+
 class TransactionAdapter extends RecyclerView.Adapter {
 
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
+    private static final String TAG = "PinActivity";
+
 
     TransactionAdapter() {
         getData();
-        populateDummyData();
+
     }
+
+    public interface OnItemClickListener {
+        public void onClick(View view, int position);
+    }
+
+
+
 
     private void getData() {
         Callback<List<Transaction>> callback = new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
                 if (response.isSuccessful()) {
-                    List<Transaction> transactionList = response.body();
-                    Log.d("DAVID", "onResponse: " + response.body());
+                    List<Transaction> tList = response.body();
+                    transactions=tList;
+
+
+                    populateData(tList);
+                    Log.d("DAVID", "onResponse price: " + transactionList.get(0).getTotalPrice());
                 } else {
-                    Log.d("DAVID", "onResponse: " + response.errorBody());
+                    Log.d("DAVID", "onResponse Error: " + response.message());
                 }
             }
 
@@ -46,11 +66,24 @@ class TransactionAdapter extends RecyclerView.Adapter {
         NetworkManager.getDigitalReceipts(callback);
     }
 
-    private void populateDummyData() {
-        for (int i = 0; i < 100; i++) {
-            transactionList.add(new Transaction("Transaction " + i, i));
+    private void populateData(List<Transaction> transactions) {
+        for(int i=0; i<transactions.size(); i++){
+            Transaction t = transactions.get(i);
+            transactionList.add(new Transaction("Transaction "+t.getId(),t.getTotalPrice()));
+            notifyItemChanged(i);
         }
+        notifyItemChanged(0);
     }
+
+//        private void populateDummyData() {
+//        getData();
+//        for (int i = 0; i < 100; i++) {
+//            Date createDate = new Date();
+//            Date purchaseDate = new Date(i, i % 12, i % 30);
+//            List<Item> items= new ArrayList<>();
+//            //transactionList.add(new Transaction("Transaction " + i, i, createDate, items));
+//        }
+//    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,6 +95,7 @@ class TransactionAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((TransactionViewHolder) holder).bindView(transactionList.get(position));
     }
+
 
     @Override
     public int getItemCount() {

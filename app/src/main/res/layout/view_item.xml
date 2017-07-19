@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:gravity="center"
+    android:id="@+id/listview_string_id"
     android:orientation="vertical">
+
 
     <EditText
         android:id="@+id/item_name_editText"
