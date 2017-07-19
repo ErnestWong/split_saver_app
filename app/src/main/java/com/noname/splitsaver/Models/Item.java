@@ -51,4 +51,6 @@ public class Item implements Serializable {
     public int getType() {
         return type;
     }
+
+    public Payee getPayee() { return payee; }
 }
