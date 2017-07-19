@@ -16,6 +16,7 @@ import com.noname.splitsaver.Utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 class ItemNameViewHolder extends ItemViewHolder {
@@ -97,4 +98,5 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
             item.setName(itemName);
         }
     }
+
 }

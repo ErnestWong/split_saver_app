@@ -5,10 +5,14 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Transaction implements Serializable {
 
+
+    @SerializedName("_id")
+    private String id;
     @SerializedName("name")
     private String name;
     @SerializedName("total")
@@ -16,9 +20,10 @@ public class Transaction implements Serializable {
     @SerializedName("createdAt")
     private Date createDate;
     @SerializedName("associatedUsers")
-    private List<Payee> payees;
+    private HashMap<String, Payee> payees;
     @SerializedName("lineItems")
     private List<Item> items;
+
 
     public Transaction(String name, float totalPrice) {
         this.name = name;
@@ -53,11 +58,15 @@ public class Transaction implements Serializable {
         return items;
     }
 
-    public List<Payee> getPayees() {
+    public HashMap<String, Payee> getPayees() {
         return payees;
     }
 
-    public void setPayees(List<Payee> payees) {
+    public void setPayees(HashMap<String, Payee> payees) {
         this.payees = payees;
+    }
+
+    public String getId() {
+        return id;
     }
 }
