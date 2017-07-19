@@ -99,7 +99,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
     void onSendReminderClicked() {
         Log.d(TAG, "send all reminder  button clicked");
         NetworkManager.postBulkPaymentRequest(postPaymentRequest, transactionId);
-        Toast.makeText(this,"Sending to all for transaction id: " + transactionId , Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Sending to all for transaction: " + transaction.getName() , Toast.LENGTH_LONG).show();
     }
 
     private ArrayList<String> convertToString(HashMap<String, Payee> payees) {
