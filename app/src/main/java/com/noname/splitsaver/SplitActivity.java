@@ -9,15 +9,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.noname.splitsaver.Item.ItemRecyclerViewAdapter;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Transaction;
-import com.noname.splitsaver.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +33,6 @@ public class SplitActivity extends AppCompatActivity {
 
     @BindView(R.id.receipt_name_editText)
     EditText receiptNameEditText;
-
-    @BindView(R.id.scroll_view)
-    ScrollView scrollView;
 
     @BindView(R.id.item_recycler_view)
     RecyclerView recyclerView;
@@ -76,13 +72,10 @@ public class SplitActivity extends AppCompatActivity {
                 lineItems.add(new Item(lineItemAmount));
             }
             if (lineItems.isEmpty()) {
-//                lineItems.add(new Item());
-                lineItems.add(new Item("abc", 20));
-                lineItems.add(new Item("edf", 10));
-                lineItems.add(new Item("ghj", 30));
+                lineItems.add(new Item());
             }
         }
-        totalTextView.setText(Utils.displayPrice(getApplicationContext(), total));
+        totalTextView.setText(getString(R.string.split_total, total));
     }
 
     @Override
@@ -99,6 +92,15 @@ public class SplitActivity extends AppCompatActivity {
 
         populateFields();
         setupRecyclerView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupRecyclerView() {

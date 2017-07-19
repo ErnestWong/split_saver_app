@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -140,13 +141,13 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
         }
     }
 
-    private boolean verifyTransaction(){
-        if(payees.isEmpty()){
+    private boolean verifyTransaction() {
+        if (payees.isEmpty()) {
             Toast.makeText(getApplicationContext(), "No payees", Toast.LENGTH_SHORT).show();
             return false;
         }
-        for(Payee payee : payees){
-            if(payee.getItems().isEmpty()){
+        for (Payee payee : payees) {
+            if (payee.getItems().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Payee is not assigned any items", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -179,6 +180,15 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
         payees = new ArrayList<>();
 
         setupViews();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupViews() {

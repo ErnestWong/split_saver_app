@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.R;
-import com.noname.splitsaver.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +83,9 @@ public class ItemAutoCompleteAdapter extends ArrayAdapter<Item> {
         TextView itemTextView = (TextView) view.findViewById(R.id.item_textView);
         Item item = getItem(position);
         if (item != null) {
-            itemTextView.setText(getContext().getString(R.string.format_strings,
+            itemTextView.setText(getContext().getString(R.string.format_name_price,
                     item.getName(),
-                    Utils.displayPrice(getContext(), item.getAmount())));
+                    item.getAmount()));
         }
     }
 
