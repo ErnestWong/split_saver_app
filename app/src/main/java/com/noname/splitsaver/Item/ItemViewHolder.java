@@ -3,6 +3,7 @@ package com.noname.splitsaver.Item;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -10,7 +11,6 @@ import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.R;
 import com.noname.splitsaver.Utils.DecimalDigitsInputFilter;
 import com.noname.splitsaver.Utils.SplitListener;
-import com.noname.splitsaver.Utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +44,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
         if (name != null && !name.isEmpty()) {
             nameEditText.setText(name);
         }
-        amountEditText.setText(Utils.displayPrice(item.getAmount()));
+        amountEditText.setText(context.getString(R.string.format_price_no_tag, item.getAmount()));
     }
 
     @OnTextChanged(R.id.item_name_editText)
@@ -59,8 +59,12 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     void onAmountTextChanged(CharSequence charSequence) {
         String amountString = charSequence.toString();
         if (!amountString.isEmpty()) {
-            float amount = Float.valueOf(amountString);
-            item.setAmount(amount);
+            try {
+                float amount = Float.valueOf(amountString);
+                item.setAmount(amount);
+            } catch (NumberFormatException e) {
+                Log.e("ItemViewHolder", "onAmountTextChanged: ", e);
+            }
         }
     }
 

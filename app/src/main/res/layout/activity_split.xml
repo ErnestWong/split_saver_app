@@ -31,35 +31,19 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/total_layout"
+    <TextView
+        android:id="@+id/total_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="Total: "
-            android:textSize="40sp" />
-
-        <TextView
-            android:id="@+id/total_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textSize="40dp" />
-
-    </RelativeLayout>
+        android:textSize="40dp" />
 
     <View
         android:id="@+id/line_separator"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_above="@id/total_layout"
+        android:layout_above="@id/total_textView"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/black" />
@@ -76,7 +60,6 @@
         android:src="@drawable/placeholder_image" />
 
     <ScrollView
-        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/add_item_btn"

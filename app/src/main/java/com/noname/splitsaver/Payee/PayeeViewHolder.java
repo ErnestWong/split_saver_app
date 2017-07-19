@@ -53,7 +53,7 @@ class PayeeViewHolder extends RecyclerView.ViewHolder {
         String name = payee.getName();
         String phoneNumber = payee.getNumber();
         if (name != null && !name.isEmpty()) {
-            payeeTextView.setText(context.getString(R.string.format_strings, phoneNumber, name));
+            payeeTextView.setText(context.getString(R.string.format_name_number, phoneNumber, name));
         } else {
             payeeTextView.setText(phoneNumber);
         }

@@ -7,16 +7,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.noname.splitsaver.Login.LoginActivity;
 import com.noname.splitsaver.Transaction.TransactionActivity;
 
-import org.opencv.android.OpenCVLoader;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.camera_btn)
     void onCameraButtonClicked() {
-//        dispatchTakePictureIntent();
+        dispatchTakePictureIntent();
         // to debug
-        ArrayList<Float> amounts = new ArrayList<>();
-        SplitActivity.startActivity(getApplicationContext(), 100, amounts);
+//        ArrayList<Float> amounts = new ArrayList<>();
+//        SplitActivity.startActivity(getApplicationContext(), 100, amounts);
     }
 
     @OnClick(R.id.history_btn)

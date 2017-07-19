@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.R;
-import com.noname.splitsaver.Utils.Utils;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class ItemListViewAdapter extends ArrayAdapter<Item> {
         Item item = getItem(position);
         if (item != null) {
             nameTextView.setText(item.getName());
-            amountTextView.setText(Utils.displayPrice(getContext(), item.getAmount()));
+            amountTextView.setText(getContext().getString(R.string.format_price, item.getAmount()));
         }
     }
 }

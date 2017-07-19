@@ -11,6 +11,9 @@
     <string name="send_all">SEND ALL</string>
     <string name="sign_up_now"><u>SIGN UP NOW</u></string>
     <string name="transaction_total" formatted="false">Total: $%.2f of $%.2f</string>
-    <string name="format_price" formatted="false">$%s</string>
-    <string name="format_strings" formatted="false">%s: %s</string>
+    <string name="split_total" formatted="false">Total: $%.2f</string>
+    <string name="format_price" formatted="false">$%.2f</string>
+    <string name="format_price_no_tag" formatted="false">%.2f</string>
+    <string name="format_name_price" formatted="false">%s: $%.2f</string>
+    <string name="format_name_number" formatted="false">%s: %s</string>
 </resources>
