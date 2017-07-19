@@ -36,6 +36,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AssignmentActivity" />
         <activity android:name=".Transaction.TransactionActivity" />
+        <activity android:name=".Transaction.TransactionDetailsActivity" />
+        <activity android:name=".Transaction.RecipientListActivity" />
     </application>
 
 </manifest>

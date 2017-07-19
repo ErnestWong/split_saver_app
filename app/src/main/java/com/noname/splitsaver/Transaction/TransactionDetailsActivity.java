@@ -33,6 +33,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "TransDetailsActivity";
     private static Transaction transaction;
+    private static Context context;
 
     @BindView(R.id.details_item_view)
     RecyclerView recyclerView;
@@ -41,8 +42,9 @@ public class TransactionDetailsActivity extends AppCompatActivity {
 
     ItemRecyclerViewAdapter itemRecyclerViewAdapter;
 
-    public static void startActivity(Context context, Transaction t) {
+    public static void startActivity(Context c, Transaction t) {
         transaction = t;
+        context = c;
         Intent intent = new Intent(context, TransactionDetailsActivity.class);
         context.startActivity(intent);
     }
@@ -69,7 +71,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         String nameText = "Name: " + transaction.getName();
         name.setText(nameText);
 
-        setupRecyclerView();
+        //setupRecyclerView();
 
         // Append to total
         TextView total =(TextView)findViewById(R.id.TransactionTotal);
@@ -82,7 +84,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
     @OnClick(R.id.send_reminder_btn)
     void onSendReminderClicked() {
         Log.d(TAG, "send reminder  button clicked");
-        RecipientListActivity.startActivity(getApplicationContext(), transaction);
+        RecipientListActivity.startActivity(context, transaction);
     }
 
     private String getFieldFromJson(String json, String fieldName) {

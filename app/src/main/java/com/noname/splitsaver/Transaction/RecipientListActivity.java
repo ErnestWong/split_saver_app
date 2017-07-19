@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -99,9 +100,9 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         Toast.makeText(this,"Sending to all for transaction id: " + transactionId , Toast.LENGTH_LONG).show();
     }
 
-    private ArrayList<String> convertToString(List<Payee> payees) {
+    private ArrayList<String> convertToString(HashMap<String, Payee> payees) {
         ArrayList<String> strings = new ArrayList<>();
-        for (Payee p :  payees) {
+        for (Payee p :  payees.values()) {
             strings.add(p.getName() + ", "+ p.getNumber() + ", $" + p.getTotal());
         }
         return strings;
