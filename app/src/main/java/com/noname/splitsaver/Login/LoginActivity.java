@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.nexmo.sdk.verify.client.VerifyClient;
@@ -29,6 +31,9 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.phone_editText)
     EditText phoneEditText;
 
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+
     public static void startActivity(Context context) {
         boolean isLogged = MainApplication.isLoggedIn(context);
         if (isLogged) {
@@ -45,20 +50,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-    }
 
-//    @OnClick(R.id.skip_login)
-//    void onSkipLogin() {
-//        MainApplication.login(getApplicationContext());
-//        MainActivity.startActivity(getApplicationContext());
-//    }
+        progressBar.setVisibility(View.GONE);
+    }
 
     @OnClick(R.id.login_btn)
     void onCapturedVerify() {
         Log.d(TAG, "send button clicked");
         final String phoneNumber = phoneEditText.getText().toString();
         if (phoneNumber.isEmpty()) {
-            Toast.makeText(this, "Name or Phone Number Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Phone Number Empty", Toast.LENGTH_SHORT).show();
             return;
         }
 
