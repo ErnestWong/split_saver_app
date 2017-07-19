@@ -141,6 +141,11 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
         if (verifyTransaction()) {
             HashMap<String, Payee> payeeMap = new HashMap<>();
             for (Payee payee : payees) {
+                int payeeTotal = 0;
+                for(Item item : payee.getItems()){
+                    payeeTotal += item.getAmount();
+                }
+                payee.setTotal(payeeTotal);
                 payeeMap.put(payee.getNumber(), payee);
             }
             transaction.setPayees(payeeMap);
