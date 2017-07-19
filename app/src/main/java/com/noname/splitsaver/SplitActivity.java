@@ -18,6 +18,7 @@ import com.noname.splitsaver.Item.ItemRecyclerViewAdapter;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Transaction;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +148,9 @@ public class SplitActivity extends AppCompatActivity {
             }
             amount += item.getAmount();
         }
-        if (amount < total) {
+        if (Math.abs(total - amount) < 0.01) {
+           return true;
+        } else if (amount < total) {
             final float remainder = total - amount;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Items amount does not add up to total")
@@ -164,10 +167,9 @@ public class SplitActivity extends AppCompatActivity {
                     })
                     .show();
             return false;
-        } else if (amount > total) {
+        } else {
             Toast.makeText(getApplicationContext(), "Items amount is greater than total!", Toast.LENGTH_SHORT).show();
             return false;
         }
-        return true;
     }
 }
