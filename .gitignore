@@ -4,5 +4,6 @@
 /.idea
 .DS_Store
 /build
+/openCVLibrary2411/build
 /captures
 .externalNativeBuild
