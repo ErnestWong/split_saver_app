@@ -53,14 +53,13 @@
         android:layout_height="50dp"
         android:layout_above="@id/total_textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
         android:text="SPLIT EVENLY" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/payee_item_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/total_textView"
-        android:layout_below="@id/split_even_btn" />
+        android:layout_above="@id/split_even_btn"
+        android:layout_below="@id/add_payee_layout" />
 
 </RelativeLayout>

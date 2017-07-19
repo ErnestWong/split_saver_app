@@ -6,10 +6,11 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/payee_name_textView"
-        android:layout_width="150dp"
+        android:id="@+id/payee_textView"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -18,10 +19,16 @@
 
         <AutoCompleteTextView
             android:id="@+id/item_autoTextView"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:hint="ADD ITEM" />
+            android:background="@drawable/background_border"
+            android:hint="ADD ITEM"
+            android:maxLines="1"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp" />
 
         <ListView
             android:id="@+id/payee_item_listView"

@@ -34,6 +34,8 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, view);
         this.context = context;
         this.listener = listener;
+
+        amountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
     }
 
     void bindView(Item item) {
@@ -43,7 +45,6 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
             nameEditText.setText(name);
         }
         amountEditText.setText(Utils.displayPrice(item.getAmount()));
-        amountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
     }
 
     @OnTextChanged(R.id.item_name_editText)

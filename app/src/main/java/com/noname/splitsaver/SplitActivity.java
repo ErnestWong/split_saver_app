@@ -76,10 +76,10 @@ public class SplitActivity extends AppCompatActivity {
                 lineItems.add(new Item(lineItemAmount));
             }
             if (lineItems.isEmpty()) {
-                lineItems.add(new Item());
-//                lineItems.add(new Item("abc", 20));
-//                lineItems.add(new Item("edf", 10));
-//                lineItems.add(new Item("ghj", 30));
+//                lineItems.add(new Item());
+                lineItems.add(new Item("abc", 20));
+                lineItems.add(new Item("edf", 10));
+                lineItems.add(new Item("ghj", 30));
             }
         }
         totalTextView.setText(Utils.displayPrice(getApplicationContext(), total));

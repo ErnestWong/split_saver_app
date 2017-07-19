@@ -23,8 +23,8 @@ import butterknife.ButterKnife;
 
 class PayeeViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.payee_name_textView)
-    TextView nameTextView;
+    @BindView(R.id.payee_textView)
+    TextView payeeTextView;
 
     @BindView(R.id.payee_item_listView)
     ListView listView;
@@ -44,18 +44,21 @@ class PayeeViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
         this.itemList = itemList;
         this.listener = listener;
+
+        setupAutoComplete();
     }
 
     void bindView(Payee payee) {
         this.payee = payee;
         String name = payee.getName();
+        String phoneNumber = payee.getNumber();
         if (name != null && !name.isEmpty()) {
-            nameTextView.setText(payee.getName());
+            payeeTextView.setText(context.getString(R.string.format_strings, phoneNumber, name));
         } else {
-            nameTextView.setText(payee.getNumber());
+            payeeTextView.setText(phoneNumber);
         }
+
         setupListView();
-        setupAutoComplete();
     }
 
     private void setupListView() {
