@@ -17,6 +17,7 @@
             android:background="@drawable/background_border"
             android:hint="Receipt Name"
             android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
             android:padding="5dp"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -27,23 +28,41 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:src="@drawable/placeholder_image" />
+            android:src="@drawable/forward_arrow_black" />
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/total_layout_splitview"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
-        android:id="@+id/total_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:text="Total: $"
         android:textSize="40dp" />
+
+    <EditText
+        android:id="@+id/total_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:hint="0.00"
+        android:inputType="numberDecimal"
+        android:layout_centerHorizontal="true"
+        android:textSize="40dp" />
+    </LinearLayout>
 
     <View
         android:id="@+id/line_separator"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_above="@id/total_textView"
+        android:layout_above="@id/total_layout_splitview"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/black" />
@@ -57,7 +76,8 @@
         android:layout_marginRight="10dp"
         android:clickable="true"
         android:padding="10dp"
-        android:src="@drawable/placeholder_image" />
+        android:background="@null"
+        android:src="@drawable/add_circle" />
 
     <ScrollView
         android:layout_width="match_parent"
