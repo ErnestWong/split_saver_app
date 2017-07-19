@@ -15,6 +15,10 @@ public class Utils {
         return context.getString(R.string.format_price, BigDecimal.valueOf(value).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     }
 
+    public static String displayPrice(float value) {
+        return BigDecimal.valueOf(value).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {

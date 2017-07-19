@@ -20,7 +20,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 class PayeeViewHolder extends RecyclerView.ViewHolder {
 
@@ -47,17 +46,14 @@ class PayeeViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-//    @OnClick(R.id.payee_add_item_btn)
-//    void onAddItemClicked() {
-//        autoCompleteTextView.getText().toString();
-//        listViewAdapter.addNewItem();
-//        listener.updateTotal();
-//        autoCompleteTextView.clearListSelection();
-//    }
-
     void bindView(Payee payee) {
         this.payee = payee;
-        nameTextView.setText(payee.getName());
+        String name = payee.getName();
+        if (name != null && !name.isEmpty()) {
+            nameTextView.setText(payee.getName());
+        } else {
+            nameTextView.setText(payee.getNumber());
+        }
         setupListView();
         setupAutoComplete();
     }
@@ -85,7 +81,7 @@ class PayeeViewHolder extends RecyclerView.ViewHolder {
         autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b){
+                if (b) {
                     autoCompleteTextView.showDropDown();
                 }
             }

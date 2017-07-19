@@ -6,50 +6,61 @@
     android:focusableInTouchMode="true"
     android:padding="20dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/add_payee_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
+        android:layout_centerHorizontal="true">
 
         <AutoCompleteTextView
             android:id="@+id/add_payee_auto"
-            android:layout_width="220dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:hint="ADD PAYEE"
             android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/split_even_btn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="SPLIT EVENLY" />
+        <ImageView
+            android:id="@+id/add_payee_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/add_payee_auto"
+            android:src="@drawable/placeholder_image" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/send_transaction_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:src="@drawable/placeholder_image" />
 
-    <Button
-        android:id="@+id/send_transaction_btn"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="SEND TRANSACTION" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/total_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/send_transaction_btn"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textSize="24sp" />
+        android:textSize="28sp" />
+
+    <Button
+        android:id="@+id/split_even_btn"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/total_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:text="SPLIT EVENLY" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/payee_item_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/total_textView"
-        android:layout_below="@id/add_payee_layout" />
+        android:layout_below="@id/split_even_btn" />
 
 </RelativeLayout>

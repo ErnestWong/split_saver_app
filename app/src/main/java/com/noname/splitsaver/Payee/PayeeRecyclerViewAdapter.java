@@ -5,12 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.noname.splitsaver.Utils.AssignmentListener;
 import com.noname.splitsaver.Models.Item;
 import com.noname.splitsaver.Models.Payee;
 import com.noname.splitsaver.R;
+import com.noname.splitsaver.Utils.AssignmentListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PayeeRecyclerViewAdapter extends RecyclerView.Adapter {

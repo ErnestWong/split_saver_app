@@ -12,7 +12,6 @@
         android:ellipsize="end"
         android:textSize="16sp" />
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
