@@ -3,13 +3,13 @@
     <string name="image_view">imageView</string>
     <string name="camera">CREATE DIGITAL RECEIPT</string>
     <string name="history">TRANSACTION HISTORY</string>
-    <string name="login">LOGIN</string>
-    <string name="sign_up">SIGN UP</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
     <string name="verify">VERIFY</string>
     <string name="logout">LOGOUT</string>
     <string name="send_reminder">SEND REMINDERS</string>
     <string name="send_all">SEND ALL</string>
-    <string name="sign_up_now"><u>SIGN UP NOW</u></string>
+    <string name="sign_up_now">No Account? Sign Up</string>
     <string name="transaction_total" formatted="false">Total: $%.2f of $%.2f</string>
     <string name="split_total" formatted="false">Total: $%.2f</string>
     <string name="format_price" formatted="false">$%.2f</string>

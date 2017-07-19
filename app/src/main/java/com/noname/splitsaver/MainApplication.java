@@ -34,6 +34,10 @@ public class MainApplication extends Application {
         return preferences.getBoolean(KEY_LOGGED_IN, false);
     }
 
+    public static VerifyClient getVerifyClient() {
+        return verifyClient;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,9 +54,5 @@ public class MainApplication extends Application {
         } catch (ClientBuilderException e) {
             e.printStackTrace();
         }
-    }
-
-    public static VerifyClient getVerifyClient() {
-        return verifyClient;
     }
 }
