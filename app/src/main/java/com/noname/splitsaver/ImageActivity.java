@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -71,6 +73,9 @@ public class ImageActivity extends AppCompatActivity {
 
     @BindView(R.id.add_amount_btn)
     ToggleButton addAmountToggleButton;
+
+    @BindView(R.id.image_activity_progress_bar)
+    ProgressBar progressBar;
 
     public static void startActivity(Context context, Uri imageUri) {
         Intent intent = new Intent(context, ImageActivity.class);
@@ -146,8 +151,9 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     public void onResume() {
 //        this.setTouchMode(TouchMode.INITIAL_MODE);
-        this.resetItemTotals();
         super.onResume();
+        this.resetItemTotals();
+        progressBar.setVisibility(View.GONE);
         if (!OpenCVLoader.initDebug()) {
             Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
@@ -164,6 +170,7 @@ public class ImageActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         itemAmounts = new ArrayList<Float>();
         setTouchMode(TouchMode.INITIAL_MODE);
+        progressBar.setVisibility(View.GONE);
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
         tessOCR = new TessOCR(this);
@@ -261,19 +268,6 @@ public class ImageActivity extends AppCompatActivity {
         return true;
     }
 
-    /*
-    @OnClick(R.id.add_total_btn)
-    void onAddTotalButtonClicked() {
-        setTouchMode(TouchMode.SELECT_TOTAL_MODE);
-    }
-
-    @OnClick(R.id.add_item_btn)
-    void onAddItemButtonClicked() {
-        setTouchMode(TouchMode.SELECT_ITEM_MODE);
-    }
-    */
-
-
     @OnClick(R.id.add_amount_btn)
     void addAmountToggleButtonClicked() {
         // CHECKED -> ADD ITEM
@@ -300,11 +294,7 @@ public class ImageActivity extends AppCompatActivity {
         if (rectView.drawn()) {
             setTouchMode(TouchMode.SELECT_TOTAL_MODE);
             subBitmap = cropBitmap(receiptBitmap, rectView.getScaledRect(receiptBitmap));
-            ImageProcess imgProcess = new ImageProcess(subBitmap, tessOCR);
-            subBitmap = imgProcess.getBitmap();
-            ocrRegions = imgProcess.getOcrRegions();
-            setImageView(subBitmap);
-            rectView.reset();
+            new ImageProcessTask().execute(subBitmap);
         } else {
             showToast("Please draw a rectangle  first.");
         }
@@ -335,7 +325,6 @@ public class ImageActivity extends AppCompatActivity {
     @OnClick(R.id.save_receipt_btn)
     void onReceiptSaveButtonClicked() {
         if (this.total != null) {
-            // TODO: save the receipt
             SplitActivity.startActivity(getApplicationContext(), this.total, this.itemAmounts);
         } else {
             showToast("Please select a total first");
@@ -400,5 +389,35 @@ public class ImageActivity extends AppCompatActivity {
     private void resetItemTotals() {
         this.total = null;
         if (this.itemAmounts != null) this.itemAmounts.clear();
+    }
+
+    private class ImageProcessTask extends AsyncTask<Bitmap, Integer, ImageProcessTaskResult> {
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        protected ImageProcessTaskResult doInBackground(Bitmap... bitmap) {
+            TessOCR tessOCR = new TessOCR(getApplicationContext());
+            ImageProcess imgProcess = new ImageProcess(subBitmap, tessOCR);
+            return new ImageProcessTaskResult(imgProcess.getBitmap(), imgProcess.getOcrRegions());
+        }
+
+        protected void onPostExecute(ImageProcessTaskResult result) {
+            subBitmap = result.bitmap;
+            ocrRegions = result.ocrRegions;
+            setImageView(subBitmap);
+            rectView.reset();
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private class ImageProcessTaskResult {
+        Bitmap bitmap;
+        List<OCRRegion> ocrRegions;
+
+        public ImageProcessTaskResult(Bitmap bitmap, List <OCRRegion> ocrRegions) {
+            this.bitmap = bitmap;
+            this.ocrRegions = ocrRegions;
+        }
     }
 }
