@@ -65,20 +65,19 @@ public class TransactionDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_details_view);
+        ButterKnife.bind(this);
 
         //Append to name
         TextView name = (TextView) findViewById(R.id.TransactionName);
         String nameText = "Name: " + transaction.getName();
         name.setText(nameText);
 
-        //setupRecyclerView();
+        setupRecyclerView();
 
         // Append to total
         TextView total =(TextView)findViewById(R.id.TransactionTotal);
         String totalText = "Total: " + transaction.getTotalPrice();
         total.setText(totalText);
-
-        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.send_reminder_btn)
