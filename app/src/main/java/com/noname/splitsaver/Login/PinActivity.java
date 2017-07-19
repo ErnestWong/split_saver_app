@@ -44,11 +44,6 @@ public class PinActivity extends Activity {
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-
-    private String name;
-    private String phoneNumber;
-    private int type;
-
     Callback<ResponseBody> postLoginUserCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -72,7 +67,8 @@ public class PinActivity extends Activity {
             t.printStackTrace();
         }
     };
-
+    private String name;
+    private String phoneNumber;
     Callback<ResponseBody> postCreateUserCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -93,6 +89,7 @@ public class PinActivity extends Activity {
             t.printStackTrace();
         }
     };
+    private int type;
 
     public static void startActivityAsSignup(Context context, String name, String phoneNumber) {
         Intent intent = new Intent(context, PinActivity.class);
@@ -115,10 +112,7 @@ public class PinActivity extends Activity {
     void onCapturedSMS() {
         Log.d(TAG, "onCapturedSMS: ");
         String pin = pinEditText.getText().toString();
-        Log.d(TAG, "PIN IS "+pin);
-
-
-
+        Log.d(TAG, "PIN IS " + pin);
 
         if (pin.equals("")) { //verify pin
             Toast.makeText(this, "Pin is empty", Toast.LENGTH_SHORT).show();

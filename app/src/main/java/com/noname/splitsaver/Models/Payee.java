@@ -11,7 +11,7 @@ public class Payee implements Serializable {
     private String name;
     @SerializedName("phone_number")
     private String number;
-    @SerializedName("linesItems")
+    @SerializedName("lineItems")
     private List<Item> items;
     @SerializedName("total")
     private float total;
