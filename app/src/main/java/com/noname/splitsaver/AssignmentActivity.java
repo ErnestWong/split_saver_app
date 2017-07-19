@@ -134,18 +134,35 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
 
     @OnClick(R.id.send_transaction_btn)
     void onSendTransactionBtnClicked() {
-        showAlert();
+        if (verifyTransaction()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Create Digital Receipt")
+                    .setMessage("Do you want to create digital receipt and send reminders to payees?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendNetworkRequest();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
+        }
     }
 
     void sendNetworkRequest() {
-        if (verifyTransaction()) {
-            HashMap<String, Payee> payeeMap = new HashMap<>();
-            for (Payee payee : payees) {
-                payeeMap.put(payee.getNumber(), payee);
+        HashMap<String, Payee> payeeMap = new HashMap<>();
+        for (Payee payee : payees) {
+            int payeeTotal = 0;
+            for (Item item : payee.getItems()) {
+                payeeTotal += item.getAmount();
             }
-            transaction.setPayees(payeeMap);
-            NetworkManager.postCreateDigitalReceipt(postCreateDigitalReceiptCallback, transaction);
+            payee.setTotal(payeeTotal);
+            payeeMap.put(payee.getNumber(), payee);
         }
+        transaction.setPayees(payeeMap);
+        NetworkManager.postCreateDigitalReceipt(postCreateDigitalReceiptCallback, transaction);
     }
 
     private boolean verifyTransaction() {
@@ -274,21 +291,5 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
             }
         }
         totalTextView.setText(getString(R.string.transaction_total, assignedAmount, transaction.getTotalPrice()));
-    }
-
-    private void showAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Create Digital Receipt")
-                .setMessage("Do you want to create digital receipt and send reminders to payees?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendNetworkRequest();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .show();
     }
 }

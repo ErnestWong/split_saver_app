@@ -41,4 +41,8 @@ public class Payee implements Serializable {
     public float getTotal() {
         return this.total;
     }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
 }
