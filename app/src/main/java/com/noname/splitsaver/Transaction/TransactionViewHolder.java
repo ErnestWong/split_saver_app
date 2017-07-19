@@ -12,8 +12,11 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 class TransactionViewHolder extends RecyclerView.ViewHolder {
+
+    Transaction transaction;
 
     @BindView(R.id.transaction_name)
     TextView name;
@@ -31,9 +34,17 @@ class TransactionViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, view);
     }
 
+    @OnClick (R.id.transaction_layout)
+    void itemClick(){
+        Transaction t = transaction;
+        //Start activity and pass in transaction
+
+    }
+
     void bindView(Transaction transaction) {
         name.setText(transaction.getName());
         totalPrice.setText(String.format("price $%.2f", transaction.getTotalPrice()));
+        this.transaction=transaction;
 //        createDate.setText(monthDayFormat.format(transaction.getCreateDate()));
     }
 }

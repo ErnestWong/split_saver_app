@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Payee implements Serializable {
+    @SerializedName("name")
     private String name;
+    @SerializedName("phone_number")
     private String number;
     @SerializedName("linesItems")
     private List<Item> items;
