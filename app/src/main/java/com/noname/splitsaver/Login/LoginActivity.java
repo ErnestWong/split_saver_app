@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                             case USER_VERIFIED: {
                                 PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
                             }case USER_UNKNOWN:{
+                                Log.d(TAG, "Unknown");
                                 Toast();
                             }
                         }
@@ -97,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void Toast(){
-        Toast.makeText(this, "Unverified Phone #. Please SignUp", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Unverified Phone #. Please Sign Up", Toast.LENGTH_SHORT).show();
         return;
 
     }
