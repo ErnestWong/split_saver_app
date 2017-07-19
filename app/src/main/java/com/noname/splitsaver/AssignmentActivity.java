@@ -57,12 +57,13 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
 
     @BindView(R.id.payee_item_recyclerView)
     RecyclerView payeeItemRecyclerView;
-    Callback<ResponseBody> postCreateDigitalReceiptCallback = new Callback<ResponseBody>() {
+    Callback<Transaction> postCreateDigitalReceiptCallback = new Callback<Transaction>() {
         @Override
-        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        public void onResponse(Call<Transaction> call, Response<Transaction> response) {
             if (response.isSuccessful()) {
                 if (response.code() == 200) {
                     Log.d(TAG, "onResponse: 200 - " + response.body());
+                    NetworkManager.postBulkPaymentRequest(postPaymentRequest, transaction.getId());
                     Toast.makeText(getApplicationContext(), "Successfully created digital receipt.", Toast.LENGTH_SHORT).show();
                     MainActivity.startActivity(getApplicationContext());
                     finish();
@@ -73,6 +74,21 @@ public class AssignmentActivity extends AppCompatActivity implements AssignmentL
             } else {
                 Log.e(TAG, "onResponse: failed - " + response.errorBody());
                 Toast.makeText(getApplicationContext(), "Create Digital Receipt Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Transaction> call, Throwable t) {
+            t.printStackTrace();
+        }
+    };
+    Callback<ResponseBody> postPaymentRequest = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            if (response.isSuccessful()) {
+                Log.d(TAG, "onResponse: "+ response.code()+" - " + response.body());
+            } else {
+                Log.e(TAG, "onResponse: failed - " + response.errorBody());
             }
         }
 

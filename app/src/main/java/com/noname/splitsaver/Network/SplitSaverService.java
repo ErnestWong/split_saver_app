@@ -31,7 +31,7 @@ public interface SplitSaverService {
     Call<ResponseBody> postBulkPaymentRequest(@Field("digitalReceiptId") String digitalReceiptId);
 
     @POST("digitalreceipt/")
-    Call<ResponseBody> postCreateDigitalReceipt(@Body Transaction transaction);
+    Call<Transaction> postCreateDigitalReceipt(@Body Transaction transaction);
 
     @GET("digitalreceipt/")
     Call<List<Transaction>> getDigitalReceipts();

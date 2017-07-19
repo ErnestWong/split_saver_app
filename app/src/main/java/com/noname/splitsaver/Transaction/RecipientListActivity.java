@@ -87,7 +87,8 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String p = (String) parent.getItemAtPosition(position);
-        String number = p.split(",")[0];
+        String number = p.split(":")[1].trim().split(",")[0];
+//        String number = p.split(",")[1];
         // Send to server
         Log.d(TAG, "Sending post reminder with: payee: "+ number +", transactionId: " + transactionId);
         NetworkManager.postPaymentRequest(postPaymentRequest, number, transactionId);
@@ -106,7 +107,11 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
         ArrayList<String> strings = new ArrayList<>();
         for (String key :  payees.keySet()) {
             Payee p = payees.get(key);
-            strings.add(key + ", $" + p.getTotal());
+            String name = "No name";
+            if(p.getName() != null && !p.getName().isEmpty()){
+                name = p.getName();
+            }
+            strings.add(name + ": " + key + ", " + getApplicationContext().getString(R.string.format_price, p.getTotal()));
         }
         return strings;
     }
