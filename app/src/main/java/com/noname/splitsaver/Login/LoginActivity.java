@@ -47,11 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.skip_login)
-    void onSkipLogin() {
-        MainApplication.login(getApplicationContext());
-        MainActivity.startActivity(getApplicationContext());
-    }
+//    @OnClick(R.id.skip_login)
+//    void onSkipLogin() {
+//        MainApplication.login(getApplicationContext());
+//        MainActivity.startActivity(getApplicationContext());
+//    }
 
     @OnClick(R.id.login_btn)
     void onCapturedVerify() {
