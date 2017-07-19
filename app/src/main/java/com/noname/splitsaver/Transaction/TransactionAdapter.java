@@ -12,6 +12,7 @@ import com.noname.splitsaver.Network.NetworkManager;
 import com.noname.splitsaver.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.OnClick;
@@ -48,7 +49,8 @@ class TransactionAdapter extends RecyclerView.Adapter {
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
                 if (response.isSuccessful()) {
                     List<Transaction> tList = response.body();
-                    transactions=tList;
+                    Collections.reverse(tList);
+                    transactions= tList;
 
 
                     populateData(tList);
