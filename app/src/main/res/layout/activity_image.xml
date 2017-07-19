@@ -64,8 +64,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:background="@null"
-            android:textOff="Add Total"
-            android:textOn="Add Item"/>
+            android:textOff="Add Total Mode"
+            android:textOn="Add Item Mode"/>
 
     </LinearLayout>
 
