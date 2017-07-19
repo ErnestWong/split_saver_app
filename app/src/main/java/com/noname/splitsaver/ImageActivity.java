@@ -16,9 +16,12 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+import android.widget.ViewSwitcher;
 
 import com.noname.splitsaver.Models.Transaction;
 import com.noname.splitsaver.ocr.ImageProcess;
@@ -57,20 +60,17 @@ public class ImageActivity extends AppCompatActivity {
     @BindView(R.id.image_view)
     ImageView imageView;
 
-    @BindView(R.id.select_rect_btn)
-    Button selectRectButton;
+    @BindView(R.id.select_rect_toggle_btn)
+    ToggleButton selectRectToggleButton;
 
     @BindView(R.id.cancel_btn)
-    Button cancelButton;
-
-    @BindView(R.id.add_item_btn)
-    Button addItemButton;
-
-    @BindView(R.id.add_total_btn)
-    Button addTotalButton;
+    ImageButton cancelButton;
 
     @BindView(R.id.save_receipt_btn)
-    Button saveReceiptButton;
+    ImageButton saveReceiptButton;
+
+    @BindView(R.id.add_amount_btn)
+    ToggleButton addAmountToggleButton;
 
     public static void startActivity(Context context, Uri imageUri) {
         Intent intent = new Intent(context, ImageActivity.class);
@@ -85,38 +85,44 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void showCorrespondingButtons() {
+        Log.d("ImageActivity", this.mode.toString());
         switch (this.mode) {
-            case SELECT_ITEM_TOTAL_MODE:
-                // cancel button, save button, add total button, select item button
+            case INITIAL_MODE:
+                // show cancel button, show select rect button.
                 cancelButton.setVisibility(View.VISIBLE);
-                saveReceiptButton.setVisibility(View.VISIBLE);
-                addTotalButton.setVisibility(View.VISIBLE);
-                addItemButton.setVisibility(View.VISIBLE);
-                selectRectButton.setVisibility(View.GONE);
+                selectRectToggleButton.setVisibility(View.VISIBLE);
+                selectRectToggleButton.setChecked(false);
+                saveReceiptButton.setVisibility(View.GONE);
+                addAmountToggleButton.setVisibility(View.GONE);
                 break;
+            case SELECT_RECT_MODE:
+                // show cancel button, show DONE button
+                cancelButton.setVisibility(View.VISIBLE);
+                selectRectToggleButton.setVisibility(View.VISIBLE);
+                selectRectToggleButton.setChecked(true);
+                saveReceiptButton.setVisibility(View.GONE);
+                addAmountToggleButton.setVisibility(View.GONE);
+                break;
+//            case SUB_BITMAP_MODE:
+//                // show cancel button, add total button, select item button
+//                cancelButton.setVisibility(View.VISIBLE);
+//                saveReceiptButton.setVisibility(View.GONE);
+//                selectRectToggleButton.setVisibility(View.GONE);
+//                addAmountToggleButton.setVisibility(View.VISIBLE);
+//                break;
             case SELECT_ITEM_MODE:
-                // cancel button, save button, add total button, select item button
+                // show cancel button, save button, add total button, select item button
                 cancelButton.setVisibility(View.VISIBLE);
                 saveReceiptButton.setVisibility(View.VISIBLE);
-                addTotalButton.setVisibility(View.VISIBLE);
-                addItemButton.setVisibility(View.VISIBLE);
-                selectRectButton.setVisibility(View.GONE);
+                selectRectToggleButton.setVisibility(View.GONE);
+                addAmountToggleButton.setVisibility(View.VISIBLE);
                 break;
             case SELECT_TOTAL_MODE:
                 // cancel button, save button, add total button, select item button
                 cancelButton.setVisibility(View.VISIBLE);
                 saveReceiptButton.setVisibility(View.VISIBLE);
-                addTotalButton.setVisibility(View.VISIBLE);
-                addItemButton.setVisibility(View.VISIBLE);
-                selectRectButton.setVisibility(View.GONE);
-                break;
-            case SELECT_RECT_MODE:
-                // cancel button, select button
-                cancelButton.setVisibility(View.VISIBLE);
-                selectRectButton.setVisibility(View.VISIBLE);
-                saveReceiptButton.setVisibility(View.GONE);
-                addTotalButton.setVisibility(View.GONE);
-                addItemButton.setVisibility(View.GONE);
+                selectRectToggleButton.setVisibility(View.GONE);
+                addAmountToggleButton.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -139,6 +145,8 @@ public class ImageActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+//        this.setTouchMode(TouchMode.INITIAL_MODE);
+        this.resetItemTotals();
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
@@ -155,9 +163,8 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
         itemAmounts = new ArrayList<Float>();
-        setTouchMode(TouchMode.SELECT_RECT_MODE);
+        setTouchMode(TouchMode.INITIAL_MODE);
 
-        final SurfaceView surfaceView = (SurfaceView) findViewById(R.id.imagesurfaceview);
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
         tessOCR = new TessOCR(this);
         rectView = new RectangleView(this);
@@ -254,6 +261,7 @@ public class ImageActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
     @OnClick(R.id.add_total_btn)
     void onAddTotalButtonClicked() {
         setTouchMode(TouchMode.SELECT_TOTAL_MODE);
@@ -263,17 +271,40 @@ public class ImageActivity extends AppCompatActivity {
     void onAddItemButtonClicked() {
         setTouchMode(TouchMode.SELECT_ITEM_MODE);
     }
+    */
 
-    @OnClick(R.id.select_rect_btn)
-    void onSelectRectButtonClicked()  {
+
+    @OnClick(R.id.add_amount_btn)
+    void addAmountToggleButtonClicked() {
+        // CHECKED -> ADD ITEM
+        // UNCHECKED -> ADD TOTAL
+        if (addAmountToggleButton.isChecked()) {
+            setTouchMode(TouchMode.SELECT_ITEM_MODE);
+        } else {
+            setTouchMode(TouchMode.SELECT_TOTAL_MODE);
+        }
+
+    }
+
+    @OnClick(R.id.select_rect_toggle_btn)
+    void onSelectRectToggleButtonClicked()  {
+        if (!selectRectToggleButton.isChecked()) { // user made a rect selection and pressed Done
+            doneDrawingBoundingRect();
+        } else {
+            // otherwise user wants to be in select mode
+            setTouchMode(TouchMode.SELECT_RECT_MODE);
+        }
+    }
+
+    void doneDrawingBoundingRect() {
         if (rectView.drawn()) {
-            setTouchMode(TouchMode.SELECT_ITEM_TOTAL_MODE);
+            setTouchMode(TouchMode.SELECT_TOTAL_MODE);
             subBitmap = cropBitmap(receiptBitmap, rectView.getScaledRect(receiptBitmap));
             ImageProcess imgProcess = new ImageProcess(subBitmap, tessOCR);
             subBitmap = imgProcess.getBitmap();
             ocrRegions = imgProcess.getOcrRegions();
-            rectView.reset();
             setImageView(subBitmap);
+            rectView.reset();
         } else {
             showToast("Please draw a rectangle  first.");
         }
@@ -283,14 +314,29 @@ public class ImageActivity extends AppCompatActivity {
     void onCancelButtonClicked() {
         rectView.reset();
         setImageView(receiptBitmap);
-        setTouchMode(TouchMode.SELECT_RECT_MODE);
-        resetItemTotals();
+        reset();
+
+        switch (this.mode) {
+            case SELECT_ITEM_MODE:
+                setTouchMode(TouchMode.INITIAL_MODE);
+                break;
+            case SELECT_TOTAL_MODE:
+                setTouchMode(TouchMode.INITIAL_MODE);
+                break;
+            case SELECT_RECT_MODE:
+                setTouchMode(TouchMode.INITIAL_MODE);
+                break;
+            case INITIAL_MODE:
+                MainActivity.startActivity(getApplicationContext());
+                break;
+        }
     }
 
     @OnClick(R.id.save_receipt_btn)
     void onReceiptSaveButtonClicked() {
         if (this.total != null) {
             // TODO: save the receipt
+            SplitActivity.startActivity(getApplicationContext(), this.total, this.itemAmounts);
         } else {
             showToast("Please select a total first");
         }
@@ -347,9 +393,12 @@ public class ImageActivity extends AppCompatActivity {
         return  null;
     }
 
+    private void reset()  {
+       resetItemTotals();
+        if (this.ocrRegions != null) this.ocrRegions.clear();
+    }
     private void resetItemTotals() {
         this.total = null;
-        this.itemAmounts.clear();
-        ocrRegions.clear();
+        if (this.itemAmounts != null) this.itemAmounts.clear();
     }
 }
