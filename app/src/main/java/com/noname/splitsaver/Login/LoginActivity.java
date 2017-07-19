@@ -19,6 +19,8 @@ import com.noname.splitsaver.MainApplication;
 import com.noname.splitsaver.R;
 
 import java.io.IOException;
+import android.widget.Toast;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                         switch (userStatus) {
                             case USER_VERIFIED: {
                                 PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
+                            }case USER_UNKNOWN:{
+                                Toast();
                             }
                         }
                     }
@@ -92,6 +96,11 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "verifyClient null");
         }
+    }
+    public void Toast(){
+        Toast.makeText(this, "Unverified Phone #. Please SignUp", Toast.LENGTH_SHORT).show();
+        return;
+
     }
 
     @OnClick(R.id.signup_btn)
