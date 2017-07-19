@@ -13,6 +13,8 @@ public class Payee implements Serializable {
     private String number;
     @SerializedName("linesItems")
     private List<Item> items;
+    @SerializedName("total")
+    private float total;
 
     public Payee(String name, String number) {
         this.name = name;
@@ -34,5 +36,9 @@ public class Payee implements Serializable {
 
     public void addItem(Item item) {
         items.add(item);
+    }
+
+    public float getTotal() {
+        return this.total;
     }
 }

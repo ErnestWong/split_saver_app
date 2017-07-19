@@ -75,16 +75,6 @@ class TransactionAdapter extends RecyclerView.Adapter {
         notifyItemChanged(0);
     }
 
-//        private void populateDummyData() {
-//        getData();
-//        for (int i = 0; i < 100; i++) {
-//            Date createDate = new Date();
-//            Date purchaseDate = new Date(i, i % 12, i % 30);
-//            List<Item> items= new ArrayList<>();
-//            //transactionList.add(new Transaction("Transaction " + i, i, createDate, items));
-//        }
-//    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transaction, parent, false);
@@ -93,7 +83,7 @@ class TransactionAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((TransactionViewHolder) holder).bindView(transactionList.get(position));
+        ((TransactionViewHolder) holder).bindView(transactions.get(position));
     }
 
 

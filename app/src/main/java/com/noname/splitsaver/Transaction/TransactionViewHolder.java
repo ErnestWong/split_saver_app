@@ -38,7 +38,7 @@ class TransactionViewHolder extends RecyclerView.ViewHolder {
     void itemClick(){
         Transaction t = transaction;
         //Start activity and pass in transaction
-
+        TransactionDetailsActivity.startActivity(name.getContext(), transaction);
     }
 
     void bindView(Transaction transaction) {
