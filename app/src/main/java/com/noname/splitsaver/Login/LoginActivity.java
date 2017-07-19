@@ -72,12 +72,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onUserStatus(UserStatus userStatus) {
                         switch (userStatus) {
+
                             case USER_VERIFIED: {
                                 PinActivity.startActivityAsLogin(getApplicationContext(), phoneNumber);
                             }case USER_UNKNOWN:{
-                                Toast();
+                                //Toast();
                             }
                         }
+                        //Toast();
                     }
 
                     @Override
@@ -96,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "verifyClient null");
         }
+        //Toast.makeText(this, "Unverified Phone #. Please SignUp", Toast.LENGTH_SHORT).show();
+
     }
     public void Toast(){
         Toast.makeText(this, "Unverified Phone #. Please SignUp", Toast.LENGTH_SHORT).show();
