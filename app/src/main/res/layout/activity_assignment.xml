@@ -27,7 +27,7 @@
             android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/add_payee_auto"
-            android:src="@drawable/placeholder_image" />
+            android:src="@drawable/add_circle" />
 
         <ImageView
             android:id="@+id/send_transaction_btn"
@@ -35,7 +35,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:src="@drawable/placeholder_image" />
+            android:src="@drawable/forward_arrow_black" />
 
     </RelativeLayout>
 
@@ -50,7 +50,7 @@
     <Button
         android:id="@+id/split_even_btn"
         android:layout_width="120dp"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_above="@id/total_textView"
         android:layout_centerHorizontal="true"
         android:text="SPLIT EVENLY" />
