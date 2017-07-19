@@ -27,7 +27,7 @@ public interface SplitSaverService {
     Call<ResponseBody> postPaymentRequest(@Field("phoneNumber") String phoneNumber, @Field("digitalReceiptId") String digitalReceiptId);
 
     @FormUrlEncoded
-    @POST("notify")
+    @POST("notify/bulk")
     Call<ResponseBody> postBulkPaymentRequest(@Field("digitalReceiptId") String digitalReceiptId);
 
     @POST("digitalreceipt/")
