@@ -84,6 +84,7 @@ public class SplitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_split);
         ButterKnife.bind(this);
+//        receiptNameEditText.setImeOptions();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

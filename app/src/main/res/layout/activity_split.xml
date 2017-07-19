@@ -17,6 +17,7 @@
             android:background="@drawable/background_border"
             android:hint="Receipt Name"
             android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
             android:padding="5dp"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -27,7 +28,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:src="@drawable/placeholder_image" />
+            android:src="@drawable/forward_arrow_black" />
 
     </RelativeLayout>
 
@@ -57,7 +58,8 @@
         android:layout_marginRight="10dp"
         android:clickable="true"
         android:padding="10dp"
-        android:src="@drawable/placeholder_image" />
+        android:background="@null"
+        android:src="@drawable/add_circle" />
 
     <ScrollView
         android:layout_width="match_parent"
