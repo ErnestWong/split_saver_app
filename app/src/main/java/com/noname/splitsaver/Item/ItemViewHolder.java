@@ -43,6 +43,8 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
         String name = item.getName();
         if (name != null && !name.isEmpty()) {
             nameEditText.setText(name);
+        } else {
+            nameEditText.setText("");
         }
         amountEditText.setText(context.getString(R.string.format_price_no_tag, item.getAmount()));
     }

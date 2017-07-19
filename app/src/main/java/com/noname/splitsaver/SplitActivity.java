@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 
 public class SplitActivity extends AppCompatActivity {
@@ -38,8 +40,8 @@ public class SplitActivity extends AppCompatActivity {
     @BindView(R.id.item_recycler_view)
     RecyclerView recyclerView;
 
-    @BindView(R.id.total_textView)
-    TextView totalTextView;
+    @BindView(R.id.total_editText)
+    EditText totalEditText;
 
     ItemRecyclerViewAdapter itemRecyclerViewAdapter;
     private float total;
@@ -76,7 +78,7 @@ public class SplitActivity extends AppCompatActivity {
                 lineItems.add(new Item());
             }
         }
-        totalTextView.setText(getString(R.string.split_total, total));
+        totalEditText.setText(getApplicationContext().getString(R.string.format_price_no_tag, total));
     }
 
     @Override
@@ -126,6 +128,19 @@ public class SplitActivity extends AppCompatActivity {
         }
     }
 
+    @OnTextChanged(R.id.total_editText)
+    void onTotalTextChanged(CharSequence charSequence) {
+        String amountString = charSequence.toString();
+        if (!amountString.isEmpty()) {
+            try {
+                float amount = Float.valueOf(amountString);
+                this.total = amount;
+            } catch (NumberFormatException e) {
+                Log.e("ItemViewHolder", "onAmountTextChanged: ", e);
+            }
+        }
+    }
+
     private Transaction createTransaction() {
         String receiptName = receiptNameEditText.getText().toString();
 
@@ -143,6 +158,7 @@ public class SplitActivity extends AppCompatActivity {
     private boolean verifyLineItems() {
         float amount = 0;
         for (Item item : lineItems) {
+            Log.d("SplitActivity", "item name: " + item.getName());
             if (item.getName() == null || item.getName().equals("")) {
                 Toast.makeText(getApplicationContext(), "Please enter a name for each line item", Toast.LENGTH_SHORT).show();
                 return false;
