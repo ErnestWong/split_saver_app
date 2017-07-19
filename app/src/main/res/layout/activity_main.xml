@@ -2,31 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/camera_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="25dp"
-        android:text="@string/camera"
-        android:textSize="15sp" />
+    <TextView
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:text="Sign out"
+        android:textSize="28sp" />
 
-    <Button
-        android:id="@+id/history_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="50dp"
-        android:text="@string/history"
-        android:textSize="15sp" />
+    <RelativeLayout
+        android:id="@+id/create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="120dp"
+        android:clickable="true">
 
-    <Button
-        android:id="@+id/logout_btn"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="50dp"
-        android:text="@string/logout"
-        android:textSize="15sp" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/add_circle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="Create"
+            android:textSize="32sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="120dp"
+        android:clickable="true">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/list_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="History"
+            android:textSize="32sp" />
+
+    </RelativeLayout>
 
 </LinearLayout>

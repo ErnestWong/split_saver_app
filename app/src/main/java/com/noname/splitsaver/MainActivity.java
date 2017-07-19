@@ -12,6 +12,7 @@ import com.noname.splitsaver.Login.LoginActivity;
 import com.noname.splitsaver.Transaction.TransactionActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,34 +22,24 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     private Uri imageUri;
 
-//    static {
-//        if(!OpenCVLoader.initDebug()){
-//            Log.d("OPENCV", "OpenCV not loaded");
-//        } else {
-//            Log.d("OPENCV", "OpenCV loaded");
-//        }
-//    }
-
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    @OnClick(R.id.camera_btn)
+    @OnClick(R.id.create)
     void onCameraButtonClicked() {
         dispatchTakePictureIntent();
-        // to debug
-//        ArrayList<Float> amounts = new ArrayList<>();
-//        SplitActivity.startActivity(getApplicationContext(), 100, amounts);
+//        SplitActivity.startActivity(getApplicationContext(), 100f, new ArrayList<Float>());
     }
 
-    @OnClick(R.id.history_btn)
+    @OnClick(R.id.history)
     void onTransactionButtonClicked() {
         TransactionActivity.startActivity(getApplicationContext());
     }
 
-    @OnClick(R.id.logout_btn)
+    @OnClick(R.id.logout)
     void onLogoutButtonClicked() {
         MainApplication.logout(getApplicationContext());
         LoginActivity.startActivity(getApplicationContext());
@@ -81,41 +72,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
-//package com.noname.splitsaver;
-//
-//import android.content.Context;
-//import android.content.Intent;
-//import android.support.v7.app.AppCompatActivity;
-//import android.os.Bundle;
-//import android.util.Log;
-//
-//import org.opencv.android.OpenCVLoader;
-//import org.opencv.core.Mat;
-//
-//public class MainActivity extends AppCompatActivity {
-//
-//    private static final String TAG = "MainActivity";
-//
-//    public static void startActivity(Context context) {
-//        Intent intent = new Intent(context, MainActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(intent);
-//    }
-//
-////    static {
-////        if(!OpenCVLoader.initDebug()){
-////            Log.d(TAG, "OpenCV not loaded");
-////        } else {
-////            Log.d(TAG, "OpenCV loaded");
-////        }
-////    }
-//
-////    @Override
-////    protected void onCreate(Bundle savedInstanceState) {
-////        System.loadLibrary("opencv_java");
-////        super.onCreate(savedInstanceState);
-////        setContentView(R.layout.activity_main);
-////
-////    }
-//}
