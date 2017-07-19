@@ -4,41 +4,45 @@
     android:layout_height="match_parent"
     android:padding="20dp">
 
-    <ViewSwitcher
-        android:id="@+id/receipt_name_viewSwitcher"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+    <RelativeLayout
+        android:id="@+id/receipt_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/receipt_name_editText"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:hint="Name of receipt"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/background_border"
+            android:hint="Receipt Name"
             android:imeOptions="actionDone"
+            android:padding="5dp"
             android:textAlignment="center"
             android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/receipt_name_textView"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="30sp" />
-    </ViewSwitcher>
+        <ImageView
+            android:id="@+id/next_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:src="@drawable/placeholder_image" />
 
-    <LinearLayout
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/total_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/next_btn"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="Total: "
             android:textSize="40sp" />
 
@@ -46,50 +50,44 @@
             android:id="@+id/total_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:textSize="40dp" />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/total_layout"
-        android:layout_below="@+id/receipt_name_viewSwitcher"
-        android:layout_marginTop="10dp">
-
-        <ScrollView
-            android:id="@+id/scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:fadeScrollbars="false">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/item_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
-
-        <Button
-            android:id="@+id/add_item_btn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="ADD ITEM" />
 
     </RelativeLayout>
 
-    <!-- TAX -->
+    <View
+        android:id="@+id/line_separator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@id/total_layout"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
-    <Button
-        android:id="@+id/next_btn"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="NEXT"
-        android:textSize="20sp" />
+    <ImageView
+        android:id="@+id/add_item_btn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@id/line_separator"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:clickable="true"
+        android:padding="10dp"
+        android:src="@drawable/placeholder_image" />
 
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/add_item_btn"
+        android:layout_below="@+id/receipt_name_layout"
+        android:layout_marginTop="10dp"
+        android:fadeScrollbars="false">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/item_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
 </RelativeLayout>

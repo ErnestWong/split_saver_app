@@ -81,12 +81,12 @@ public class ItemAutoCompleteAdapter extends ArrayAdapter<Item> {
     }
 
     private void setupViews(View view, int position) {
-        TextView nameTextView = (TextView) view.findViewById(R.id.name_textView);
-        TextView amountTextView = (TextView) view.findViewById(R.id.amount_textView);
+        TextView itemTextView = (TextView) view.findViewById(R.id.item_textView);
         Item item = getItem(position);
         if (item != null) {
-            nameTextView.setText(item.getName());
-            amountTextView.setText(Utils.displayPrice(getContext(), item.getAmount()));
+            itemTextView.setText(getContext().getString(R.string.format_strings,
+                    item.getName(),
+                    Utils.displayPrice(getContext(), item.getAmount())));
         }
     }
 

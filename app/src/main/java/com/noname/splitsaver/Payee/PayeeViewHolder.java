@@ -20,12 +20,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 class PayeeViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.payee_name_textView)
-    TextView nameTextView;
+    @BindView(R.id.payee_textView)
+    TextView payeeTextView;
 
     @BindView(R.id.payee_item_listView)
     ListView listView;
@@ -45,21 +44,21 @@ class PayeeViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
         this.itemList = itemList;
         this.listener = listener;
-    }
 
-//    @OnClick(R.id.payee_add_item_btn)
-//    void onAddItemClicked() {
-//        autoCompleteTextView.getText().toString();
-//        listViewAdapter.addNewItem();
-//        listener.updateTotal();
-//        autoCompleteTextView.clearListSelection();
-//    }
+        setupAutoComplete();
+    }
 
     void bindView(Payee payee) {
         this.payee = payee;
-        nameTextView.setText(payee.getName());
+        String name = payee.getName();
+        String phoneNumber = payee.getNumber();
+        if (name != null && !name.isEmpty()) {
+            payeeTextView.setText(context.getString(R.string.format_strings, phoneNumber, name));
+        } else {
+            payeeTextView.setText(phoneNumber);
+        }
+
         setupListView();
-        setupAutoComplete();
     }
 
     private void setupListView() {
@@ -85,7 +84,7 @@ class PayeeViewHolder extends RecyclerView.ViewHolder {
         autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b){
+                if (b) {
                     autoCompleteTextView.showDropDown();
                 }
             }

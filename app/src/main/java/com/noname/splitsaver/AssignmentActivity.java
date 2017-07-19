@@ -1,11 +1,12 @@
 package com.noname.splitsaver;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AssignmentActivity extends Activity implements AssignmentListener {
+public class AssignmentActivity extends AppCompatActivity implements AssignmentListener {
 
     public static final String EXTRA_TRANSACTION = "extraTransaction";
     private static final String TAG = "AssignmentActivity";
@@ -91,6 +92,27 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
         context.startActivity(intent);
     }
 
+    @OnClick(R.id.add_payee_btn)
+    void onAddPayeeClicked() {
+        String phoneNumber = addPayeeAuto.getText().toString();
+        if (PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
+            Payee payee = new Payee("", formatNumber(phoneNumber));
+            addPayee(payee);
+        } else {
+            Toast.makeText(getApplicationContext(), "Not a valid number", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addPayee(Payee payee) {
+        if (payees.contains(payee)) {
+            Toast.makeText(getApplicationContext(), "The selected payee is already added", Toast.LENGTH_SHORT).show();
+        } else {
+            payees.add(payee);
+            payeeRecyclerViewAdapter.notifyDataSetChanged();
+            addPayeeAuto.setText("");
+        }
+    }
+
     @OnClick(R.id.split_even_btn)
     void onSplitEvenClicked() {
         int numPayee = payees.size();
@@ -108,7 +130,7 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
 
     @OnClick(R.id.send_transaction_btn)
     void onSendButtonClicked() {
-        if (!payees.isEmpty()) {
+        if (verifyTransaction()) {
             HashMap<String, Payee> payeeMap = new HashMap<>();
             for (Payee payee : payees) {
                 payeeMap.put(payee.getNumber(), payee);
@@ -118,11 +140,31 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
         }
     }
 
+    private boolean verifyTransaction(){
+        if(payees.isEmpty()){
+            Toast.makeText(getApplicationContext(), "No payees", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        for(Payee payee : payees){
+            if(payee.getItems().isEmpty()){
+                Toast.makeText(getApplicationContext(), "Payee is not assigned any items", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment);
         ButterKnife.bind(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.get(EXTRA_TRANSACTION) != null) {
@@ -148,13 +190,7 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Payee payee = (Payee) adapterView.getItemAtPosition(i);
-                if (payees.contains(payee)) {
-                    Toast.makeText(getApplicationContext(), "The selected payee is already added", Toast.LENGTH_SHORT).show();
-                } else {
-                    payees.add(payee);
-                    addPayeeAuto.setText("");
-                    payeeRecyclerViewAdapter.notifyDataSetChanged();
-                }
+                addPayee(payee);
             }
         });
         addPayeeAuto.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -185,15 +221,8 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                String normalized = PhoneNumberUtils.normalizeNumber(phoneNumber);
-                if (normalized.startsWith("+")) {
-                    normalized = normalized.replaceFirst("\\+", "");
-                }
-                if (normalized.startsWith("1")) {
-                    normalized = normalized.replaceFirst("1", "");
-                }
-
-                contactList.add(new Payee(name, normalized));
+                String formattedNumber = formatNumber(phoneNumber);
+                contactList.add(new Payee(name, formattedNumber));
             }
             cursor.close();
         }
@@ -204,6 +233,17 @@ public class AssignmentActivity extends Activity implements AssignmentListener {
             }
         });
         return contactList;
+    }
+
+    private String formatNumber(String number) {
+        String normalized = PhoneNumberUtils.normalizeNumber(number);
+        if (normalized.startsWith("+")) {
+            normalized = normalized.replaceFirst("\\+", "");
+        }
+        if (normalized.startsWith("1")) {
+            normalized = normalized.replaceFirst("1", "");
+        }
+        return normalized;
     }
 
     @Override

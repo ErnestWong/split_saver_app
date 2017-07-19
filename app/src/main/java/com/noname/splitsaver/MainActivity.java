@@ -42,13 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.camera_btn)
     void onCameraButtonClicked() {
-        dispatchTakePictureIntent();
+//        dispatchTakePictureIntent();
         // to debug
-//        ArrayList<Float> amounts = new ArrayList<Float>();
-//        amounts.add(10f);
-//        amounts.add(10f);
-//        amounts.add(10f);
-//        SplitActivity.startActivity(getApplicationContext(), 100, amounts);
+        ArrayList<Float> amounts = new ArrayList<>();
+        SplitActivity.startActivity(getApplicationContext(), 100, amounts);
     }
 
     @OnClick(R.id.history_btn)
