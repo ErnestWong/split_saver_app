@@ -83,7 +83,7 @@ class TransactionAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((TransactionViewHolder) holder).bindView(transactionList.get(position));
+        ((TransactionViewHolder) holder).bindView(transactions.get(position));
     }
 
 

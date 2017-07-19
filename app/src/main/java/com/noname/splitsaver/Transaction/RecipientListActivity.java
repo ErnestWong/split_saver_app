@@ -47,6 +47,7 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
 
     public static void startActivity(Context context, Transaction t) {
         transaction = t;
+        transactionId = t.getId();
         Intent intent = new Intent(context, RecipientListActivity.class);
         context.startActivity(intent);
     }
@@ -85,11 +86,12 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String payee = (String) parent.getItemAtPosition(position);
+        String p = (String) parent.getItemAtPosition(position);
+        String number = p.split(",")[0];
         // Send to server
-        Log.d(TAG, "Sending post reminder with: payee: "+ payee +", transactionId: " + transactionId);
-        NetworkManager.postPaymentRequest(postPaymentRequest, payee, transactionId);
-        Toast.makeText(this,"Sending reminder to " + payee , Toast.LENGTH_LONG).show();
+        Log.d(TAG, "Sending post reminder with: payee: "+ number +", transactionId: " + transactionId);
+        NetworkManager.postPaymentRequest(postPaymentRequest, number, transactionId);
+        Toast.makeText(this,"Sending reminder to " + number , Toast.LENGTH_LONG).show();
 
     }
 
@@ -102,8 +104,9 @@ public class RecipientListActivity extends AppCompatActivity implements AdapterV
 
     private ArrayList<String> convertToString(HashMap<String, Payee> payees) {
         ArrayList<String> strings = new ArrayList<>();
-        for (Payee p :  payees.values()) {
-            strings.add(p.getName() + ", "+ p.getNumber() + ", $" + p.getTotal());
+        for (String key :  payees.keySet()) {
+            Payee p = payees.get(key);
+            strings.add(key + ", $" + p.getTotal());
         }
         return strings;
     }
